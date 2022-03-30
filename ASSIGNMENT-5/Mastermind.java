@@ -60,7 +60,7 @@ public class Mastermind {
     /**
      * Displays a Menu like output 
      * for the user to choose from
-     * @return a charcter the user enters
+     * @return a char the user enters
      */
     private static char menu() {
             System.out.println("(Y) - Start");
@@ -87,7 +87,7 @@ public class Mastermind {
     /**
      * Displays a Menu like output for the
      * different difficulties the user can choose from
-     * @return a char the user input in the
+     * @return a char with the user input of the difficultly they want
      */
     private static int difficulty() {
         System.out.println();
@@ -122,7 +122,7 @@ public class Mastermind {
      * @param cheater a boolean if true digits for computer gets shown
      * @param numGuesses a int with a number of guess the user wants 12, 9, 6
      */
-    private static void gameTime(boolean cheater,final int numGuesses) {
+    private static void gameTime(boolean cheater,final int numGuessesAllowed) {
         int numberOfAttempts = 0;
         boolean quits = false;
 
@@ -141,7 +141,7 @@ public class Mastermind {
             printList(compList, howMany);
         
         //Starts the Master Mind game
-        while(numberOfAttempts<numGuesses&&quits!=true){
+        while(numberOfAttempts<numGuessesAllowed&&quits!=true){
             message(numberOfAttempts,howMany,compList,playerList);
             String guess = keyboard.next();
             while(!checkInput(guess,howMany)){
@@ -151,7 +151,7 @@ public class Mastermind {
             }
             if(checkGuess(guess, howMany, compList, playerList)){
                 congratulation(numberOfAttempts,compList);
-                numberOfAttempts = numGuesses;
+                numberOfAttempts = numGuessesAllowed;
             }
             else
                 howManyCorrect(howMany,compList,playerList);
@@ -217,7 +217,7 @@ public class Mastermind {
 
     /**
      * Sends out a message to the user welcoming them to the game
-     * Asks the user if they want a hint after 3,6,and >10 tries
+     * Asks the user if they want a hint after 3,6,and >9 tries
      * @param tries a int with number of times guessed
      * @param length a int with the max legth of the array
      * @param CL a int array that stores the computers numbers
@@ -229,25 +229,36 @@ public class Mastermind {
             System.out.println("Each digit in the hidden set of digits are unique from the rest and are in random positions");
             System.out.println("Enter a random string of numbers of length "+length);
         }
-        else if(tries==3||tries==6||tries>10){
+        else if(tries==3||tries==6||tries>9){
             System.out.print("Do you want a hint? (Y)es or (N)o ");
-            giveHint(keyboard.next().toUpperCase().charAt(0),tries,CL,PL);
+            giveHint(keyboard.next().toUpperCase().charAt(0),tries,length,CL,PL);
         }
 
     }
     /**
      * Offers the user a hint if they want
-     * If yes then give user a hint of 1 or 2 digits
-     * or give user a index of a digit if they are over 9 tries
+     * If yes then give user a hint of 1 digit if length 
+     * is less than 5 or 2 if the length is greater than 6 digits and over 9 guesses 
+     * or give user a index and a digit if they are over 10 tries
      * if no then return the user to guessing
-     * @param hint
+     * @param hint a char Either 'Y' if they want a hint or anything else no hint
      * @param tries a int with number of times guessed
      * @param CL a int array that stores the computers numbers
      * @param PL a int array that stores the players guesses
      */
-    private static void giveHint(char hint,int tries,int[] CL, int[] PL) {
+    private static void giveHint(char hint,final int tries,final int length, int[] CL, int[] PL) {
         if(hint=='Y'){
-            
+            int num1 = (int)(Math.random()*length);
+            int num2 = (int)(Math.random()*length);
+            if(tries>9)
+                System.out.println(CL[num1]+" is in index "+num1);
+            if(tries>9&&length>=6){
+                while(num1==num2)
+                    num2 = (int)(Math.random()*length);
+                System.out.println(CL[num1]+" and "+CL[num2]+ " is in the Computers list");
+            }
+            else
+                System.out.println(CL[num1]+" is in the computers list");
         }
         
     }
@@ -309,11 +320,14 @@ public class Mastermind {
      */
     private static void congratulation(int tries, int[] CL) {
         tries+=1;
-        System.out.println("Congratulation you win");
+        System.out.println("\nCongratulation you win");
         System.out.println("It took "+tries+" Guess to Match the computer");
         System.out.print("The Computers digits were ");
-        for(int i: CL)
-            System.out.print(i+", ");
+        for(int i=0; i<CL.length; i++){
+            System.out.print(CL[i]);
+            if(i!=CL.length-1)
+                System.out.print(", ");
+        }
         System.out.println();
     }
     /**

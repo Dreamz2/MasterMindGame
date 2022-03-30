@@ -1,7 +1,8 @@
 /*
 Name: Edison Wei   Student Number: 100374523
 Course: CPSC 1150-003
-Purpose: Mastermind game
+Purpose: Like the game Mastermind but that uses colours.
+            This game will be using random different numbers.
 */
 import java.util.Scanner;
 
@@ -122,7 +123,7 @@ public class Mastermind {
      * @param numGuesses a int with a number of guess the user wants 12, 9, 6
      */
     private static void gameTime(boolean cheater,final int numGuesses) {
-        int tries = 0;
+        int numberOfAttempts = 0;
         boolean quits = false;
 
         System.out.print("How many digits should be guessed this time (not more than 10, but at least 2.) ");
@@ -135,28 +136,28 @@ public class Mastermind {
         //intialized array list and  Gets random numbers and puts in random arrays
         int[] compList = getRandom(howMany);
         int[] playerList = new int[howMany];
-        System.out.println(numGuesses);
 
         if(cheater==true)
             printList(compList, howMany);
         
         //Starts the Master Mind game
-        while(tries<numGuesses||quits!=true){
-            message(tries,howMany,compList,playerList);
+        while(numberOfAttempts<numGuesses&&quits!=true){
+            message(numberOfAttempts,howMany,compList,playerList);
             String guess = keyboard.next();
             while(!checkInput(guess,howMany)){
                 System.out.println("Enter a random string of numbers again with a length of "+howMany);
                 guess = keyboard.next();
+                System.out.println();
             }
             if(checkGuess(guess, howMany, compList, playerList)){
-                congratulation()
+                congratulation(numberOfAttempts,compList);
+                numberOfAttempts = numGuesses;
             }
             else
                 howManyCorrect(howMany,compList,playerList);
             
 
-            tries++;
-            break;
+            numberOfAttempts++;
         }
         
     }
@@ -295,6 +296,25 @@ public class Mastermind {
 
         return(correct==length);
         
+    }
+
+    /**
+     * Congratulate the user when the users guess matches 
+     * the computers list of digits. Print out the number 
+     * of tries it took the user to guess the digits and 
+     * print out the computers list
+     * @param tries
+     * @param CL
+     * @param PL
+     */
+    private static void congratulation(int tries, int[] CL) {
+        tries+=1;
+        System.out.println("Congratulation you win");
+        System.out.println("It took "+tries+" Guess to Match the computer");
+        System.out.print("The Computers digits were ");
+        for(int i: CL)
+            System.out.print(i+", ");
+        System.out.println();
     }
     /**
      * Sends out a message telling the user from their guess

@@ -1,7 +1,8 @@
 /*
 Name: Edison Wei   Student Number: 100374523
 Course: CPSC 1150-003
-Purpose: Mastermind game
+Purpose: Like the game Mastermind but that uses colours.
+            This game will be using random different numbers.
 */
 import java.util.Scanner;
 
@@ -122,7 +123,8 @@ public class Mastermind {
      * @param numGuesses a int with a number of guess the user wants 12, 9, 6
      */
     private static void gameTime(boolean cheater,final int numGuesses) {
-        int tries = 0;
+        int numberOfAttempts = 0;
+        boolean quits = false;
 
         System.out.print("How many digits should be guessed this time (not more than 10, but at least 2.) ");
         int howMany = keyboard.nextInt();
@@ -134,29 +136,40 @@ public class Mastermind {
         //intialized array list and  Gets random numbers and puts in random arrays
         int[] compList = getRandom(howMany);
         int[] playerList = new int[howMany];
-        System.out.println(numGuesses);
 
         if(cheater==true)
             printList(compList, howMany);
         
         //Starts the Master Mind game
-        while(tries<numGuesses){
-            message(tries,howMany,compList,playerList);
+        while(numberOfAttempts<numGuesses&&quits!=true){
+            message(numberOfAttempts,howMany,compList,playerList);
             String guess = keyboard.next();
             while(!checkInput(guess,howMany)){
                 System.out.println("Enter a random string of numbers again with a length of "+howMany);
                 guess = keyboard.next();
+                System.out.println();
             }
-            checkGuess(guess,howMany,compList,playerList);
+            if(checkGuess(guess, howMany, compList, playerList)){
+                congratulation(numberOfAttempts,compList);
+                numberOfAttempts = numGuesses;
+            }
+            else
+                howManyCorrect(howMany,compList,playerList);
+            
 
-            tries++;
-            break;
+            numberOfAttempts++;
         }
         
     }
 
-    private static void printList(int[] list,int end) {
-        for(int count=0; count<end;count++){
+    /**
+     * Prints the computers list of digits
+     * if Cheater mode is activated
+     * @param list a int array that stores the computers numbers
+     * @param length a int with the max legth of the array
+     */
+    private static void printList(int[] list,int length) {
+        for(int count=0; count<length;count++){
             System.out.println(count+" = "+list[count]+" ");
             if(count%15==0&&count!=0)
                 System.out.println("");
@@ -164,10 +177,23 @@ public class Mastermind {
         System.out.println("");
     }
 
+    /**
+     * Checks to see if the user input number is 
+     * between the range 2 (inclusive) and 10 (exclusive)
+     * @param num a int with the user input
+     * @return True if the number is between 2 (inclusive) and 10 (exclusive)
+     */
     private static boolean checkDigit(int num) {
         return (num>=2&&num<10);
     }
 
+    /**
+     * Returns a list of random digits in a desired length
+     * All the digits generated will be checked with the list
+     * so all the digits in the list are different from one other
+     * @param length a int with the max legth of the array
+     * @return int array with random different digits
+     */
     private static int[] getRandom(int length) {
         int[] list = new int[length];
         int num;
@@ -193,7 +219,7 @@ public class Mastermind {
      * Sends out a message to the user welcoming them to the game
      * Asks the user if they want a hint after 3,6,and >10 tries
      * @param tries a int with number of times guessed
-     * @param length a int with the max legth of array
+     * @param length a int with the max legth of the array
      * @param CL a int array that stores the computers numbers
      * @param PL a int array that stores the players guesses
      */
@@ -205,16 +231,33 @@ public class Mastermind {
         }
         else if(tries==3||tries==6||tries>10){
             System.out.print("Do you want a hint? (Y)es or (N)o ");
-            giveHint(keyboard.next().toUpperCase().charAt(0),CL,PL);
+            giveHint(keyboard.next().toUpperCase().charAt(0),tries,CL,PL);
         }
 
     }
-    private static void giveHint(char hint,int[] CL, int[] PL) {
+    /**
+     * Offers the user a hint if they want
+     * If yes then give user a hint of 1 or 2 digits
+     * or give user a index of a digit if they are over 9 tries
+     * if no then return the user to guessing
+     * @param hint
+     * @param tries a int with number of times guessed
+     * @param CL a int array that stores the computers numbers
+     * @param PL a int array that stores the players guesses
+     */
+    private static void giveHint(char hint,int tries,int[] CL, int[] PL) {
         if(hint=='Y'){
             
         }
         
     }
+    /**
+     * Checks if the Users guess is the correct length
+     * and if the Digits in the guess are all different
+     * @param guess a String with the users input guess
+     * @param length a int with the max legth of the array
+     * @return True if Users guess is correct length and all digits are different
+     */
     private static boolean checkInput(String guess, int length) {
         if(guess.length()==length){
             for(int i=0; i<length; i++){
@@ -232,12 +275,63 @@ public class Mastermind {
             return false;
     }
 
-    private static void checkGuess(String guess,int length,int[] CL, int[] PL) {
+    /**
+     * Checks to see if the users Guess matches the Computers
+     * list of digits
+     * @param guess a String with the users input guess
+     * @param length a int with the max legth of the array
+     * @param CL a int array that stores the computers numbers
+     * @param PL a int array that stores the players guesses
+     * @return True if the guess matches the Computers list of digits
+     */
+    private static boolean checkGuess(String guess,int length,int[] CL, int[] PL) {
+        int correct = 0;
+        for(int i=0; i<length; i++)
+            PL[i] = guess.charAt(i)-'0';
+        
+        for(int i=0; i<length; i++){
+            if(PL[i]==CL[i])
+                correct++;
+        }
+
+        return(correct==length);
+        
+    }
+
+    /**
+     * Congratulate the user when the users guess matches 
+     * the computers list of digits. Print out the number 
+     * of tries it took the user to guess the digits and 
+     * print out the computers list
+     * @param tries
+     * @param CL
+     * @param PL
+     */
+    private static void congratulation(int tries, int[] CL) {
+        tries+=1;
+        System.out.println("Congratulation you win");
+        System.out.println("It took "+tries+" Guess to Match the computer");
+        System.out.print("The Computers digits were ");
+        for(int i: CL)
+            System.out.print(i+", ");
+        System.out.println();
+    }
+    /**
+     * Sends out a message telling the user from their guess
+     * how many of the number are correct and in there right place
+     * and how many are correct but in the wrong place.
+     * @param length a int with the max legth of the array
+     * @param CL a int array that stores the computers numbers
+     * @param PL a int array that stores the players guesses
+     */
+    private static void howManyCorrect(int length,int[] CL, int[] PL) {
         int counter = 0;
         int correctPlace = 0;
         int wrongPlacee = 0;
+
+        //Comapres and counts how many are right in correct place and wrong place
         while(counter<length){
-            int num = guess.charAt(counter)-'0';
+            int num = PL[counter];
             for(int index=0; index<length; index++){
                 if(CL[index]==num){
                     if(index==counter)
@@ -246,10 +340,10 @@ public class Mastermind {
                         wrongPlacee++;
                 }
             }
-            PL[counter]=num;
             counter++;
         }
+
         System.out.println(correctPlace+" are correct and in there right place");
-        System.out.println(wrongPlacee+" are correcy but in there wrong place");
+        System.out.println(wrongPlacee+" are correct but in there wrong place");
     }
 }

@@ -250,13 +250,16 @@ public class Mastermind {
         if(hint=='Y'){
             int num1 = (int)(Math.random()*length);
             int num2 = (int)(Math.random()*length);
+            //Give hint of a digit and the place it is in
             if(tries>9)
                 System.out.println(CL[num1]+" is in index "+num1);
+            //Give two random digits in CL
             if(tries>9&&length>=6){
                 while(num1==num2)
                     num2 = (int)(Math.random()*length);
                 System.out.println(CL[num1]+" and "+CL[num2]+ " is in the Computers list");
             }
+            //Give a random digit in CL
             else
                 System.out.println(CL[num1]+" is in the computers list");
         }

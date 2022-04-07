@@ -7,7 +7,7 @@ Purpose: Like the game Mastermind but that uses colours.
 import java.util.Scanner;
 
 /**
- * Mastermind
+ * Mastermind game
  * @author Edison Wei
  * @since March 27, 2022
  */
@@ -89,7 +89,7 @@ public class Mastermind {
      */
     private static int difficulty() {
         System.out.println();
-        System.out.println("What difficulty do you want to play on");
+        System.out.println("What difficulty do you want to play");
         System.out.println("12 Guesses  - (E)asy");
         System.out.println("9  Guesses  - (M)edium");
         System.out.println("6  Guesses  - (H)ard");
@@ -121,48 +121,55 @@ public class Mastermind {
      * @param numGuesses a int with a number of guess the user wants 12, 9, 6
      */
     private static void gameTime(boolean cheater,final int numGuessesAllowed) {
-        int numberOfAttempts = 0;
         boolean quits = false;
+        int numberOfGamesPlayed = 0;
+        //The amount of guesses made throughout all the games played
+        int numberOfGuessesmade = 0;
 
-        System.out.print("How many digits should be guessed this time (not more than 10, but at least 2.) ");
-        int howMany = keyboard.nextInt();
-        if(!checkDigit(howMany)){
-            System.out.println("Enter a digit again (not more than 10, but at least 2.)");
-            howMany = keyboard.nextInt();
-        }
-
-        //intialized array list and  Gets random numbers and puts in random arrays
-        int[] compList = getRandom(howMany);
-        int[] playerList = new int[howMany];
-
-        if(cheater==true)
-            printList(compList, howMany);
-        
-        //Starts the Master Mind game
-        while(numberOfAttempts<numGuessesAllowed&&quits!=true){
-            message(numberOfAttempts,howMany,compList,playerList);
-            String guess = keyboard.next();
-            while(!checkInput(guess,howMany)){
-                System.out.println("Enter a random string of numbers again with a length of "+howMany);
-                guess = keyboard.next();
-                System.out.println();
+        while(!quits){
+            int numberOfAttempts = 0;
+            //Ask the user how many number they want to guess
+            System.out.print("How many digits do you want to be guessed? (not more than 10, but at least 2.) ");
+            int howMany = keyboard.nextInt();
+            //Checks to see if the number put in meets the requirments
+            if(!checkDigit(howMany)){
+                System.out.println("Enter a digit again (not more than 10, but at least 2.)");
+                howMany = keyboard.nextInt();
             }
-            if(checkGuess(guess, howMany, compList, playerList)){
-                congratulation(numberOfAttempts,compList);
-                numberOfAttempts = numGuessesAllowed;
-            }
-            else
-                howManyCorrect(howMany,compList,playerList);
+
+            //intialized array list and  Gets random numbers and puts in random arrays
+            int[] compList = getRandom(howMany);
+            int[] playerList = new int[howMany];
+
+            if(cheater==true)
+                printList(compList, howMany);
             
+            //Starts the Master Mind game
+            while(numberOfAttempts<numGuessesAllowed&&quits!=true){
+                message(numberOfAttempts,howMany,compList,playerList);
+                String guess = keyboard.next();
+                while(!checkInput(guess,howMany)){
+                    System.out.println("Enter a random string of numbers again with a length of "+howMany);
+                    guess = keyboard.next();
+                    System.out.println();
+                }
+                if(checkGuess(guess, howMany, compList, playerList)){
+                    congratulation(numberOfAttempts,compList);
+                    quits = true;
+                }
+                else
+                    howManyCorrect(howMany,compList,playerList);
+                
+                numberOfAttempts++;
+            }
 
-            numberOfAttempts++;
+            if(numberOfAttempts==numGuessesAllowed)
+                compWins(compList);
+            numberOfGuessesmade+=numberOfAttempts;
+            numberOfGamesPlayed++;
+            quits = checkQuit();
         }
-        if(numberOfAttempts==numGuessesAllowed)
-            compWins(compList);
-
-        System.out.print("\nDo you want to play again? ");
-
-        
+        averagePerformance(numberOfGuessesmade,numberOfGamesPlayed);
     }
 
     /**
@@ -256,6 +263,7 @@ public class Mastermind {
     private static void giveHint(char hint,final int tries,final int length, int[] CL, int[] PL) {
         final int MAX_THRESHOLDGUESSES = 9;
         final int MAX_THRESHOLDLENGTH = 6;
+        System.out.println();
         if(hint=='Y'){
             int num1 = (int)(Math.random()*length);
             int num2 = (int)(Math.random()*length);
@@ -333,7 +341,7 @@ public class Mastermind {
     private static void congratulation(int tries, int[] CL) {
         tries+=1;
         System.out.println("\nCongratulation you win");
-        System.out.println("It took "+tries+" Guess to Match the computer");
+        System.out.println("It took you "+tries+" Guesses to Match the computer");
         System.out.print("The Computers digits were ");
         for(int i=0; i<CL.length; i++){
             System.out.print(CL[i]);
@@ -369,13 +377,14 @@ public class Mastermind {
             counter++;
         }
 
+        System.out.println();
         System.out.println(correctPlace+" are correct and in there right place");
         System.out.println(wrongPlacee+" are correct but in there wrong place");
     }
     
     /**
      * Prints out "You lose" message with the list of
-     * the Computers Digits when the user guesses over the limit
+     * the Computers Digits when the user guess limit is reached
      * @param CL a int array that stores the computers numbers
      */
     private static void compWins(int[] CL) {
@@ -383,6 +392,37 @@ public class Mastermind {
         System.out.print("The Computers Digits were ");
         for (int i : CL) {
             System.out.print(i);
+            if(i!=CL.length-1)
+            System.out.print(", ");
         }
+        System.out.println();
+    }
+
+    /**
+     * Checks to see if the user wants to
+     * play the game again
+     * @param ifYes a char to check if the user wants to stop playing
+     * @return true if user wants to stop
+     */
+    private static boolean checkQuit() {
+        System.out.println("\nDo you want to play again? (Y)es or (N)o ");
+        System.out.println("(Y)es to continue playing");
+        System.out.println("(N)o to stop playing and be sent to the main menu");
+        return(keyboard.next().toUpperCase().charAt(0)=='N');
+    }
+
+    /**
+     * Prints out the average performance of the user. Also,
+     * Prints out the number of games played and number of guesses
+     * made from all games played
+     * @param numGuesses a int that has the number of guesses made from all games played
+     * @param gamesPlaed a int that has the number of games played 
+     */
+    private static void averagePerformance(int numGuesses, int gamesPlayed) {
+        double average = numGuesses/gamesPlayed;
+
+        System.out.println("\nYour Average Performance overall is: "+average);
+        System.out.println("Number of games played: "+gamesPlayed);
+        System.out.println("Number of guesses made throughout all games: "+numGuesses+"\n\n");
     }
 }

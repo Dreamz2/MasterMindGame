@@ -228,6 +228,7 @@ public class Mastermind {
     /**
      * Prints out a message to the user welcoming them to the game
      * Also, asks the user if they want a hint after 3, 6, and >9 tries
+
      * @param tries a int with number of times guessed
      * @param length a int with the max length of the digits 
      * @param CL a int array that stores the computers numbers

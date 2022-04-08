@@ -249,12 +249,13 @@ public class Mastermind {
     }
     /**
      * Offers the user a hint if they choose too
-     * If yes then give user a hint of one of the following
+     * If yes then give user a hint of one of the following when choice is <=7
      * If number of tries is greater than 9 give user one random number in Computers list
      * with the index
      * if number of tries is greater than 9 and the length of the guess is greater than 5
      * then give user two random digits in the Computers list
      * if none of the  conditions are met then give user 1 random digit in Computers list
+     * if choice is >7 then print the check sum of the Computers list
      * if no then return the user to guessing
      * @param hint a char Either 'Y' if they want a hint or anything else no hint
      * @param tries a int with number of times guessed
@@ -265,27 +266,39 @@ public class Mastermind {
         final int MAX_THRESHOLDGUESSES = 9;
         final int MAX_THRESHOLDLENGTH = 6;
         System.out.println();
+
         if(hint=='Y'){
-            int num1 = (int)(Math.random()*length);
+            final int num1 = (int)(Math.random()*length);
             int num2 = (int)(Math.random()*length);
-            //Give two random digits in CL
-            if(tries>MAX_THRESHOLDGUESSES&&length>=MAX_THRESHOLDLENGTH){
-                while(num1==num2)
-                    num2 = (int)(Math.random()*length);
-                System.out.println(CL[num1]+" and "+CL[num2]+ " is in the Computers list");
+            final int choice = (int)(Math.random()*10);
+            if(choice<=7){
+                //Give two random digits in CL
+                if(tries>MAX_THRESHOLDGUESSES&&length>=MAX_THRESHOLDLENGTH){
+                    while(num1==num2)
+                        num2 = (int)(Math.random()*length);
+                    System.out.println(CL[num1]+" and "+CL[num2]+ " is in the Computers list");
+                }
+                //Give hint of a digit and the place it is in
+                else if(tries>MAX_THRESHOLDGUESSES)
+                    System.out.println(CL[num1]+" is in index "+num1);
+                //Give a random digit in CL
+                else
+                    System.out.println(CL[num1]+" is in the computers list");
             }
-            //Give hint of a digit and the place it is in
-            else if(tries>MAX_THRESHOLDGUESSES)
-                System.out.println(CL[num1]+" is in index "+num1);
-            //Give a random digit in CL
-            else
-                System.out.println(CL[num1]+" is in the computers list");
+            else{
+                int sum = 0;
+                for (int i : CL) {
+                    sum+=i;
+                }
+                System.out.println("The check sum of the Computers digits is: "+sum);
+            }
+
         }
         
     }
     /**
      * Checks if the Users guess is the correct length
-     * and if the Digits in the guess are all different
+     * and if all the Digits in the guess are all different
      * @param guess a String with the users input guess
      * @param length a int with the max legth of the array
      * @return True if Users guess is correct length and all digits are different

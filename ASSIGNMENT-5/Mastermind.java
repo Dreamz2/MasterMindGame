@@ -116,8 +116,18 @@ public class Mastermind {
     }
 
     /**
-     * 
-     * @param cheater a boolean if true digits for computer gets shown
+     * Master Mind Game Handler
+     * After starting the game and choosing how many guesses they are allowed
+     * The game will start. First, will prompt the user to enter how many digits they will guess
+     * 2 included - 10 excluded. Then the computer will pick random different digits.
+     * If cheater mode is on then will display the computer
+     * Second, the user will keep guessing until they guess the computers digits or if they go over the 
+     * number of guesses allowed. When those conditions are met then prompt message for win or lose with 
+     * the computers list. Finally, the program will ask if the user wants to play again after the game has finished.
+     * If yes, will ask the user to enter how many digits they will guess for this game and run the game
+     * If no, then print out the avgerage performance for how many games they played and the total guesses
+     * from all games. Then will return them back to the menu of the game to select Start, Cheater, or exit
+     * @param cheater a boolean if true digits for the computers list will be shown
      * @param numGuesses a int with a number of guess the user wants 12, 9, 6
      */
     private static void gameTime(boolean cheater,final int numGuessesAllowed) {
@@ -127,6 +137,7 @@ public class Mastermind {
         int numberOfGuessesmade = 0;
 
         while(!quits){
+            //To check if the playerWins so computer wins messgae does not show up
             boolean playerWins = false;
             int numberOfAttempts = 0;
             //Ask the user how many number they want to guess
@@ -405,10 +416,10 @@ public class Mastermind {
     private static void compWins(int[] CL) {
         System.out.println("\nYou lose");
         System.out.print("The Computers Digits were ");
-        for (int i : CL) {
-            System.out.print(i);
+        for (int i=0; i<CL.length; i++) {
+            System.out.print(CL[i]);
             if(i!=CL.length-1)
-            System.out.print(", ");
+                System.out.print(", ");
         }
         System.out.println();
     }

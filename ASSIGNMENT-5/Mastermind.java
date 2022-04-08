@@ -127,6 +127,7 @@ public class Mastermind {
         int numberOfGuessesmade = 0;
 
         while(!quits){
+            boolean playerWins = false;
             int numberOfAttempts = 0;
             //Ask the user how many number they want to guess
             System.out.print("How many digits do you want to be guessed? (not more than 10, but at least 2.) ");
@@ -145,7 +146,7 @@ public class Mastermind {
                 printList(compList, howMany);
             
             //Starts the Master Mind game
-            while(numberOfAttempts<numGuessesAllowed&&quits!=true){
+            while(numberOfAttempts<numGuessesAllowed&&playerWins!=true){
                 message(numberOfAttempts,howMany,compList,playerList);
                 String guess = keyboard.next();
                 while(!checkInput(guess,howMany)){
@@ -155,7 +156,7 @@ public class Mastermind {
                 }
                 if(checkGuess(guess, howMany, compList, playerList)){
                     congratulation(numberOfAttempts,compList);
-                    quits = true;
+                    playerWins = true;
                 }
                 else
                     howManyCorrect(howMany,compList,playerList);
@@ -163,7 +164,7 @@ public class Mastermind {
                 numberOfAttempts++;
             }
 
-            if(numberOfAttempts==numGuessesAllowed)
+            if(numberOfAttempts==numGuessesAllowed&&!playerWins)
                 compWins(compList);
             numberOfGuessesmade+=numberOfAttempts;
             numberOfGamesPlayed++;
@@ -435,8 +436,8 @@ public class Mastermind {
     private static void averagePerformance(int numGuesses, int gamesPlayed) {
         double average = ((double)numGuesses/(double)gamesPlayed);
 
-        System.out.println("\nYour Average Performance overall is: "+average);
-        System.out.println("Number of games played: "+gamesPlayed);
-        System.out.println("Number of guesses made throughout all games: "+numGuesses+"\n\n");
+        System.out.printf("%n%-37s%1.2f%n","Your Average Performance overall is:",average);
+        System.out.printf("%-24s%-2d%n","Number of games played:",gamesPlayed);
+        System.out.printf("%-45s%-3d%n%n","Number of guesses made throughout all games:",numGuesses);
     }
 }

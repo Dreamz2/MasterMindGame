@@ -226,16 +226,17 @@ public class Mastermind {
     }
 
     /**
-     * Sends out a message to the user welcoming them to the game
-     * Asks the user if they want a hint after 3,6,and >9 tries
+     * Prints out a message to the user welcoming them to the game
+     * Also, asks the user if they want a hint after 3, 6, and >9 tries
+
      * @param tries a int with number of times guessed
-     * @param length a int with the max legth of the array
+     * @param length a int with the max length of the digits 
      * @param CL a int array that stores the computers numbers
      * @param PL a int array that stores the players guesses
      */
     private static void message(final int tries,final int length,int[] CL, int[] PL) {
         if(tries==0){
-            System.out.println("Welcome to Master Mind");
+            System.out.println("\nWelcome to Master Mind");
             System.out.println("Each digit in the hidden set of digits are unique from the rest and are in random positions");
         }
         else if(tries==3||tries==6||tries>9){
@@ -416,10 +417,10 @@ public class Mastermind {
      * Prints out the number of games played and number of guesses
      * made from all games played
      * @param numGuesses a int that has the number of guesses made from all games played
-     * @param gamesPlaed a int that has the number of games played 
+     * @param gamesPlaed a int that has the number of games played
      */
     private static void averagePerformance(int numGuesses, int gamesPlayed) {
-        double average = numGuesses/gamesPlayed;
+        double average = ((double)numGuesses/(double)gamesPlayed);
 
         System.out.println("\nYour Average Performance overall is: "+average);
         System.out.println("Number of games played: "+gamesPlayed);

@@ -15,7 +15,7 @@ public class Mastermind {
     static Scanner keyboard = new Scanner(System.in);
     public static void main(String[] args) {
 
-        printIdentification();
+        //printIdentification();
         gameHandler();
     }
     
@@ -45,11 +45,7 @@ public class Mastermind {
         do{
             check = menu();
             if(wantToPlay(check)){
-                if(cheatOnOff(check))
-                    cheater=true;
-                else
-                    cheater=false;
-                gameTime(cheater,difficulty());
+                gameTime(cheatOnOff(check),difficulty());
             }
 
         }while(wantToPlay(check));

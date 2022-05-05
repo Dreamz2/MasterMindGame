@@ -1,8 +1,6 @@
 /*
-Name: Edison Wei   Student Number: 100374523
-Course: CPSC 1150-003
 Purpose: Like the game Mastermind but that uses colours.
-            This game will be using random different numbers.
+            This game will be using random different digits.
 */
 import java.util.Scanner;
 
@@ -15,20 +13,9 @@ public class Mastermind {
     static Scanner keyboard = new Scanner(System.in);
     public static void main(String[] args) {
 
-        printIdentification();
         gameHandler();
     }
     
-    /**
-     * Prints My Idenitfication
-     * To show it is me who wrote the code
-     */
-    private static void printIdentification(){
-        System.out.println("Name: Edison Wei   Student Number: 100374523");
-        System.out.println("Course: CPSC 1150-003");
-        System.out.println("ASSIGNMENT #5 – Master Mind");
-        System.out.println();
-    }
     /**
      * Main menu to the Mastermind game can used to Start
      * enter Cheater mode and Exit. Also, after choosing 
@@ -39,17 +26,12 @@ public class Mastermind {
      * Then starts the gameTime method
      */
     private static void gameHandler() {
-        boolean cheater = false;
         char check;
 
         do{
             check = menu();
             if(wantToPlay(check)){
-                if(cheatOnOff(check))
-                    cheater=true;
-                else
-                    cheater=false;
-                gameTime(cheater,difficulty());
+                gameTime(cheatOnOff(check),difficulty());
             }
 
         }while(wantToPlay(check));
@@ -425,7 +407,7 @@ public class Mastermind {
     }
 
     /**
-     * Checks to see if the user wants to
+     * Checks to see if the user would like to 
      * play the game again
      * @param ifYes a char to check if the user wants to stop playing
      * @return true if user wants to stop

@@ -39,7 +39,6 @@ public class Mastermind {
      * Then starts the gameTime method
      */
     private static void gameHandler() {
-        boolean cheater = false;
         char check;
 
         do{
@@ -421,7 +420,7 @@ public class Mastermind {
     }
 
     /**
-     * Checks to see if the user wants to
+     * Checks to see if the user would like to 
      * play the game again
      * @param ifYes a char to check if the user wants to stop playing
      * @return true if user wants to stop

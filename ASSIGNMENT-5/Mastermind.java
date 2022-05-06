@@ -2,6 +2,7 @@
 Purpose: Like the game Mastermind but that uses colours.
             This game will be using random different digits.
 */
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -67,7 +68,7 @@ public class Mastermind {
     /**
      * Displays a Menu like output for the
      * different difficulties the user can choose from
-     * @return a char with the user input of the difficultly they want
+     * @return a char with the user input of the difficulty they want
      */
     private static int difficulty() {
         System.out.println();
@@ -114,14 +115,23 @@ public class Mastermind {
      */
     private static void gameTime(boolean cheater,final int numGuessesAllowed) {
         boolean quits = false;
+        //The number of games played
         int numberOfGamesPlayed = 0;
-        //The amount of guesses made throughout all the games played
+        //The number of guesses made throughout all the games played
         int numberOfGuessesmade = 0;
+
+        ArrayList<ArrayList<String>> guessesList = new ArrayList<>();
+        int listCounter = 0;
 
         while(!quits){
             //To check if the playerWins so computer wins messgae does not show up
             boolean playerWins = false;
             int numberOfAttempts = 0;
+
+            //Initialize a new 2D Array list
+            guessesList.add(new ArrayList<>());
+            guessesList.get(listCounter).add("Game #"+(listCounter+1));
+
             //Ask the user how many number they want to guess
             System.out.print("How many digits do you want to be guessed? (not more than 10, but at least 2.) ");
             int howMany = keyboard.nextInt();
@@ -142,11 +152,14 @@ public class Mastermind {
             while(numberOfAttempts<numGuessesAllowed&&playerWins!=true){
                 message(numberOfAttempts,howMany,compList,playerList);
                 String guess = keyboard.next();
+
                 while(!checkInput(guess,howMany)){
                     System.out.println("Enter a random string of numbers again with a length of "+howMany);
                     guess = keyboard.next();
                     System.out.println();
                 }
+                guessesList.get(listCounter).add(guess);
+
                 if(checkGuess(guess, howMany, compList, playerList)){
                     congratulation(numberOfAttempts,compList);
                     playerWins = true;
@@ -161,8 +174,13 @@ public class Mastermind {
                 compWins(compList);
             numberOfGuessesmade+=numberOfAttempts;
             numberOfGamesPlayed++;
+
+            //Increase to change where to input guesses
+            listCounter++;
             quits = checkQuit();
         }
+        System.out.println();
+        printPreviousGuesses(guessesList,fillMissingValues(guessesList));
         averagePerformance(numberOfGuessesmade,numberOfGamesPlayed);
     }
 
@@ -421,7 +439,7 @@ public class Mastermind {
 
     /**
      * Prints out the average performance of the user. Also,
-     * Prints out the number of games played and number of guesses
+     * Prints out the number of games played and the number of guesses
      * made from all games played
      * @param numGuesses a int that has the number of guesses made from all games played
      * @param gamesPlaed a int that has the number of games played
@@ -432,5 +450,62 @@ public class Mastermind {
         System.out.printf("%n%-37s%1.2f%n","Your Average Performance overall is:",average);
         System.out.printf("%-24s%-2d%n","Number of games played:",gamesPlayed);
         System.out.printf("%-45s%-3d%n%n","Number of guesses made throughout all games:",numGuesses);
+    }
+
+    /**
+     * Finds the game with the most guesses made and 
+     * fills the ArrayList with a space to max out the 
+     * most guesses made in a game
+     * @param List a ArrayList of past guesses made with the curroct answer
+     * @return a int with the most guesses made in a game
+     */
+    private static int fillMissingValues(ArrayList<ArrayList<String>> List) {
+        //Largest guessed on a game played
+        int largestValue = 0;
+        for (int i = 0; i < List.size(); i++) {
+            if(List.get(i).size()>largestValue)
+                largestValue=List.get(i).size();
+        }
+        int i=0;
+        while(i<List.size()){
+            if(List.get(i).size()!=largestValue)
+                List.get(i).add(" ");
+            else
+                i++;
+        }
+        return largestValue;
+    }
+
+    /**
+     * Prints out a list of past guesses made with each game played.
+     * Using the largest guess made as a limiter for the print size.
+     * 
+     * @param List a ArrayList of past guesses made with the curroct answer
+     * @param INPUTSALLOWED a int that contains the most guess made from the games played
+     */
+    private static void printPreviousGuesses(ArrayList<ArrayList<String>> List, final int INPUTSALLOWED) {
+        //The number of games played
+        final int NUMBEROFGAMES = List.size();
+        //The number of games allowed to be printed
+        final int PRINTEDSIZE = 2;
+        int listCounter = 0;
+
+        while(listCounter<NUMBEROFGAMES){
+            int inputCounter = 0;
+            while(inputCounter<INPUTSALLOWED){
+                int printed = 0;
+                while(printed<PRINTEDSIZE){
+                    if(listCounter<NUMBEROFGAMES)
+                        System.out.printf("%-11s", List.get(listCounter).get(inputCounter));
+                    printed++;
+                    listCounter++;
+                }
+                System.out.println();
+                inputCounter++;
+                listCounter-=PRINTEDSIZE;
+            }
+            listCounter+=PRINTEDSIZE;
+
+        }
     }
 }

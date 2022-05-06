@@ -452,6 +452,13 @@ public class Mastermind {
         System.out.printf("%-45s%-3d%n%n","Number of guesses made throughout all games:",numGuesses);
     }
 
+    /**
+     * Finds the game with the most guesses made and 
+     * fills the ArrayList with a space to max out the 
+     * most guesses made in a game
+     * @param List a ArrayList of past guesses made with the curroct answer
+     * @return a int with the most guesses made in a game
+     */
     private static int fillMissingValues(ArrayList<ArrayList<String>> List) {
         //Largest guessed on a game played
         int largestValue = 0;
@@ -469,6 +476,13 @@ public class Mastermind {
         return largestValue;
     }
 
+    /**
+     * Prints out a list of past guesses made with each game played.
+     * Using the largest guess made as a limiter for the print size.
+     * 
+     * @param List a ArrayList of past guesses made with the curroct answer
+     * @param INPUTSALLOWED a int that contains the most guess made from the games played
+     */
     private static void printPreviousGuesses(ArrayList<ArrayList<String>> List, final int INPUTSALLOWED) {
         //The number of games played
         final int NUMBEROFGAMES = List.size();

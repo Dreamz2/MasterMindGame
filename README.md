@@ -1,14 +1,16 @@
-# MasterMind Game
-This java program is like **Master Mind** a code-breaking game for two players. Instead, it will be 
+# MasterMind
+The java program is an attempt on creating **Master Mind** a code-breaking game for two players. Instead, it will be 
 **Player** vs **Computer**. Also, because guessing a list of colours will take a long time, the 
 player will be guessing digits 0-9 in the computer's lists. The player will have to enter the 
 length of the list they are wanting to guess (2 inclusive to 10 exclusives). Once the length is entered, 
-the computer will generate a random list of digits within the given length. The digits in the list are to 
+the computer will generate a random list of digits within the given length. The digits in the list will  
 be different from one another. The program will let the player continue playing until they want to stop.
 Finally, print out the average performance of all games played.
 
-Some improvements would be to list out all past guesses for each game played. Another improvement would 
-be to print out the best and worst game played.
+Some improvements I would like to make to the program is to list out all past guesses made for 
+each game the player has played. Another would be to print out the best and worst 
+game played during that session. Display the number of guesses the player has left for each guess
+Finally, maybe implement OOP to make the game run more smoothly.
 
 ## List of Criteria
 - Have a Main menu
@@ -30,7 +32,10 @@ be to print out the best and worst game played.
 
 ## Improvements
 - List out past user digit inputs
-  - Read List
+  - Used ArrayList to keep users input
 - Print out the best and worst game played
+- Display the number of attempts left when guessing
+<!-- - Implement OOP to the program -->
+
 
 <!--![Improved Content]() -->

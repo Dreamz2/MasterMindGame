@@ -33,9 +33,10 @@ Finally, maybe implement OOP to make the game run more smoothly.
 ## Improvements
 - List out past user digit inputs
   - Used ArrayList to keep users input
-- Print out the best and worst game played
 - Display the number of attempts left when guessing
-<!-- - Implement OOP to the program -->
+< currently working now 
+- Print out the best and worst game played
+<!-- - Implement OOP to the program maybe-->
 
 
 <!--![Improved Content]() -->

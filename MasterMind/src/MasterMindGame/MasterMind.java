@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 public class MasterMind extends Application {
 
     BorderPane rootPane;
-    VBox centerPane;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -50,14 +49,9 @@ public class MasterMind extends Application {
         
         topPane.getChildren().add(message);
 
-
-        centerPane = new VBox(30);
-        centerPane.setAlignment(Pos.CENTER);
-
         new Menu(stage);
 
         rootPane.setTop(topPane);
-        rootPane.setCenter(centerPane);
 
         Scene scene = new Scene(rootPane, 500, 500);
 		
@@ -67,14 +61,17 @@ public class MasterMind extends Application {
         
     }
 
-    public class Menu {
+    public class Menu implements Difficulty{
         
         private String[] mainLabels = {"Start", "Cheater Mode", "Exit"};
         private ArrayList<Label> initialMenu = new ArrayList<>();
         private int guesses = 12, length = 2;
         private boolean cheaterMode = false;
+        private VBox centerPane;
 
         Menu(Stage stage) {
+            centerPane = new VBox(30);
+            centerPane.setAlignment(Pos.CENTER);
             for (String name : mainLabels) {
                 Label label = new Label(name);
                 label.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 30));
@@ -102,6 +99,7 @@ public class MasterMind extends Application {
                 initialMenu.add(label);
             }
             centerPane.getChildren().addAll(initialMenu);
+            rootPane.setCenter(centerPane);
         }
 
         private void removeMenu() {
@@ -131,14 +129,14 @@ public class MasterMind extends Application {
                 radioPane.setAlignment(Pos.CENTER);
                     ToggleGroup difficulty = new ToggleGroup();
                     RadioButton rad1 = new RadioButton("12 Guesses - Easy");
-                    rad1.setUserData("12");
+                    rad1.setUserData(EASY);
                     rad1.setSelected(true);
                     rad1.setTextFill(Color.WHITE);
                     RadioButton rad2 = new RadioButton("9 Guesses - Medium");
-                    rad2.setUserData("9");
+                    rad2.setUserData(MEDIUM);
                     rad2.setTextFill(Color.WHITE);
                     RadioButton rad3 = new RadioButton("6 Guesses - Hard");
-                    rad3.setUserData("6");
+                    rad3.setUserData(HARD);
                     rad3.setTextFill(Color.WHITE);
 
                     rad1.setToggleGroup(difficulty);
@@ -185,6 +183,11 @@ public class MasterMind extends Application {
         GameHandler(int length, int guesses) {
             this.length = length;
             this.guesses = guesses;
+            displayEnvironment();
+        }
+
+        public void displayEnvironment() {
+
         }
 
     }

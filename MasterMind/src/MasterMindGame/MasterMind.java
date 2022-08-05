@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -179,15 +180,27 @@ public class MasterMind extends Application {
         
         private int length;
         private int guesses;
+        private int guessesLeft;
+        private VBox centerPane;
+        private GridPane inputs;
+        private ArrayList<Button> inputsBtn = new ArrayList<>();
 
         GameHandler(int length, int guesses) {
             this.length = length;
             this.guesses = guesses;
+            guessesLeft = guesses;
+            centerPane = new VBox(20);
+            inputs = new GridPane();
+            inputs.setVgap(10);
+            inputs.setHgap(5);
+
             displayEnvironment();
         }
 
         public void displayEnvironment() {
-
+            for(int i = 0; i < guesses; i++) {
+                
+            }
         }
 
     }

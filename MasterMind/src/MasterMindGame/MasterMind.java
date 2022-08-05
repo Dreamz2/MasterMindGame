@@ -66,7 +66,7 @@ public class MasterMind extends Application {
         
         private String[] mainLabels = {"Start", "Cheater Mode", "Exit"};
         private ArrayList<Label> initialMenu = new ArrayList<>();
-        private int guesses = 12, length = 2;
+        private int guessesAllowed = 12, lengthOfDigits = 2;
         private boolean cheaterMode = false;
         private VBox centerPane;
 
@@ -145,7 +145,7 @@ public class MasterMind extends Application {
                     rad3.setToggleGroup(difficulty);
 
                     difficulty.selectedToggleProperty().addListener(e -> {
-                        guesses = Integer.parseInt(difficulty.getSelectedToggle().getUserData().toString());
+                        guessesAllowed = Integer.parseInt(difficulty.getSelectedToggle().getUserData().toString());
                     });
 
                 radioPane.getChildren().addAll(rad1, rad2, rad3);
@@ -158,13 +158,13 @@ public class MasterMind extends Application {
 
                         @Override
                         public void handle(ActionEvent arg0) {
-                            length = Integer.parseInt(lenText.getText().toString());
-                            if(length<2||length>9) {
-                                lenLabel.setText("Enter length between 2 - 9");
+                            lengthOfDigits = Integer.parseInt(lenText.getText().toString());
+                            if(lengthOfDigits<2||lengthOfDigits>9) {
+                                lenLabel.setText("Enter lengthOfDigits between 2 - 9");
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
-                                new GameHandler(length, guesses);
+                                new GameHandler(lengthOfDigits, guessesAllowed);
                             }
                         }
                         
@@ -178,17 +178,17 @@ public class MasterMind extends Application {
 
     public class GameHandler{
         
-        private int length;
-        private int guesses;
+        private int lengthOfDigits;
+        private int guessesAllowed;
         private int guessesLeft;
         private VBox centerPane;
         private GridPane inputs;
         private ArrayList<Button> inputsBtn = new ArrayList<>();
 
-        GameHandler(int length, int guesses) {
-            this.length = length;
-            this.guesses = guesses;
-            guessesLeft = guesses;
+        GameHandler(int lengthOfDigits, int guessesAllowed) {
+            this.lengthOfDigits = lengthOfDigits;
+            this.guessesAllowed = guessesAllowed;
+            guessesLeft = guessesAllowed;
             centerPane = new VBox(20);
             inputs = new GridPane();
             inputs.setVgap(10);
@@ -198,8 +198,11 @@ public class MasterMind extends Application {
         }
 
         public void displayEnvironment() {
-            for(int i = 0; i < guesses; i++) {
-                
+            for(int i = 0; i < guessesAllowed; i++) {
+                // ArrayList
+                for(int j = 0; j < lengthOfDigits; j++) {
+                    
+                }
             }
         }
 

@@ -15,9 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -160,7 +162,7 @@ public class MasterMind extends Application {
                         public void handle(ActionEvent arg0) {
                             lengthOfDigits = Integer.parseInt(lenText.getText().toString());
                             if(lengthOfDigits<2||lengthOfDigits>9) {
-                                lenLabel.setText("Enter lengthOfDigits between 2 - 9");
+                                lenLabel.setText("Enter Length between 2 - 9");
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
@@ -178,32 +180,52 @@ public class MasterMind extends Application {
 
     public class GameHandler{
         
-        private int lengthOfDigits;
-        private int guessesAllowed;
+        private int lengthOfDigits; // columns
+        private int guessesAllowed; // rows
         private int guessesLeft;
         private VBox centerPane;
-        private GridPane inputs;
-        private ArrayList<Button> inputsBtn = new ArrayList<>();
+        private HBox inputsPane;
+        private ArrayList<Integer> userInputs = new ArrayList<>();
 
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
             guessesLeft = guessesAllowed;
             centerPane = new VBox(20);
-            inputs = new GridPane();
-            inputs.setVgap(10);
-            inputs.setHgap(5);
+            inputsPane = new HBox(5);
+            inputsPane.setAlignment(Pos.CENTER);
 
             displayEnvironment();
+
+            rootPane.setCenter(centerPane);
         }
 
         public void displayEnvironment() {
-            for(int i = 0; i < guessesAllowed; i++) {
-                // ArrayList
-                for(int j = 0; j < lengthOfDigits; j++) {
-                    
+            if(guessesLeft!=0) {
+                Label guessesLeftLabel = new Label("Guesses Left: " + guessesLeft);
+                TextField tf;
+                int j;
+            
+                for(int i = 0; i < lengthOfDigits; i++) {
+                    tf = new TextField();
+                    tf.setBorder(Border.stroke(Color.BLACK));
+
+                    inputsPane.getChildren().add(tf);
                 }
+
+
+                Button submitBtn = new Button("Submit");
+                submitBtn.setOnAction(e -> {
+                    for(int i = 0; i < lengthOfDigits; i++) {
+                        
+                    }
+                    inputsPane.getChildren().removeAll(tf);
+                });
             }
+            else {
+
+            }
+
         }
 
     }

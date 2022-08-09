@@ -1,7 +1,6 @@
 package src.MasterMindGame;
 
 import java.util.ArrayList;
-import java.util.function.UnaryOperator;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -15,9 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -28,7 +25,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 public class MasterMind extends Application {
 
@@ -336,6 +332,12 @@ public class MasterMind extends Application {
                 }
                 System.out.println("The check sum of the Computers digits is: "+sum);
             }
+        }
+
+        private void setHintsBox() {
+
+
+            rootPane.setLeft(hintPane);
         }
 
         private void finishGame(boolean wOrL) {

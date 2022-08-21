@@ -15,8 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -65,7 +67,7 @@ public class MasterMind extends Application {
         
         private String[] mainLabels = {"Start", "Cheater Mode", "Exit"};
         private ArrayList<Label> initialMenu = new ArrayList<>();
-        private int guesses = 12, length = 2;
+        private int guessesAllowed = 12, lengthOfDigits = 2;
         private boolean cheaterMode = false;
         private VBox centerPane;
 
@@ -144,7 +146,7 @@ public class MasterMind extends Application {
                     rad3.setToggleGroup(difficulty);
 
                     difficulty.selectedToggleProperty().addListener(e -> {
-                        guesses = Integer.parseInt(difficulty.getSelectedToggle().getUserData().toString());
+                        guessesAllowed = Integer.parseInt(difficulty.getSelectedToggle().getUserData().toString());
                     });
 
                 radioPane.getChildren().addAll(rad1, rad2, rad3);
@@ -157,13 +159,13 @@ public class MasterMind extends Application {
 
                         @Override
                         public void handle(ActionEvent arg0) {
-                            length = Integer.parseInt(lenText.getText().toString());
-                            if(length<2||length>9) {
-                                lenLabel.setText("Enter length between 2 - 9");
+                            lengthOfDigits = Integer.parseInt(lenText.getText().toString());
+                            if(lengthOfDigits<2||lengthOfDigits>9) {
+                                lenLabel.setText("Enter Length between 2 - 9");
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
-                                new GameHandler(length, guesses);
+                                new GameHandler(lengthOfDigits, guessesAllowed);
                             }
                         }
                         
@@ -177,18 +179,171 @@ public class MasterMind extends Application {
 
     public class GameHandler{
         
-        private int length;
-        private int guesses;
+        private int lengthOfDigits; // columns
+        private int guessesAllowed; // rows
+        private int attemptsMade;
+        private VBox centerPane;
+        private HBox inputsPane;
+        private VBox hintPane;
+        private ArrayList<TextField> tfList = new ArrayList<>();
+        private int[] compList;
+        private ArrayList<ArrayList<Integer>> userInputs = new ArrayList<>();
 
-        GameHandler(int length, int guesses) {
-            this.length = length;
-            this.guesses = guesses;
+        GameHandler(int lengthOfDigits, int guessesAllowed) {
+            this.lengthOfDigits = lengthOfDigits;
+            this.guessesAllowed = guessesAllowed;
+            attemptsMade = 0;
+            compList = getRandom(lengthOfDigits);
+            centerPane = new VBox(20);
+            centerPane.setAlignment(Pos.CENTER);
+            inputsPane = new HBox(5);
+            inputsPane.setAlignment(Pos.CENTER);
+            hintPane = new VBox(5);
+
             displayEnvironment();
+            setHintsBox();
+
+            rootPane.setCenter(centerPane);
         }
 
         public void displayEnvironment() {
+            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
 
+            Label message = new Label("Enter a random string of numbers of length "+lengthOfDigits);
+
+            for(int i = 0; i < lengthOfDigits; i++) {
+                TextField tf = new TextField();
+                tf.setBorder(Border.stroke(Color.BLACK));
+                tf.setMaxSize(30, 25);
+
+                inputsPane.getChildren().add(tf);
+                tfList.add(tf);
+            }
+
+            Button submitBtn = new Button("Submit");
+            submitBtn.setOnAction(e -> {
+
+                userInputs.add(new ArrayList<>());
+                for(int i = 0; i < lengthOfDigits; i++) {
+                    userInputs.get(attemptsMade).add(Integer.parseInt(tfList.get(i).getText().toString()));
+                    tfList.get(i).setText("");
+                }
+
+                
+
+                if(checkGuess()){
+                    finishGame(true);
+                }
+                else if(attemptsMade==guessesAllowed) {
+                    finishGame(false);
+                }
+                messages(message);
+                attemptsMade++;
+            });
+
+            centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
         }
+
+        private boolean checkGuess() {
+            int correct = 0;
+            
+            for(int i=0; i<lengthOfDigits; i++){
+                if(userInputs.get(attemptsMade).get(i)==compList[i])
+                    correct++;
+            }
+    
+            return(correct==lengthOfDigits);
+        }
+
+        private int[] getRandom(final int length) {
+            int[] list = new int[length];
+            int num;
+    
+            for(int i=0; i<length; i++){
+                int x = 0;
+                num = (int)(Math.random()*10);
+                while(x<i){
+                    if(list[x]==num){
+                        num = (int)(Math.random()*10);
+                        x=0;
+                    }
+                    else
+                        x++;
+                }
+                list[i] = num;
+            }
+            
+            return list;
+        }
+
+        private void messages(Label message) {
+            if(attemptsMade==0){
+                message.setText("Welcome to Master Mind\n"
+                                + "Each digit in the hidden set of digits are unique from the rest and are in random positions");
+            }
+            else if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
+                centerPane.getChildren().removeAll();
+
+                Label hint = new Label("Do you want a hint?");
+
+                HBox ynPane = new HBox(20);
+                Button yes = new Button();
+                yes.setOnAction(e -> {
+                    giveAHint();
+                    centerPane.getChildren().removeAll();
+                    displayEnvironment();
+                });
+                Button no = new Button();
+                no.setOnAction(e -> {
+                    centerPane.getChildren().removeAll();
+                    displayEnvironment();
+                });
+                ynPane.getChildren().addAll(yes, no);
+                centerPane.getChildren().addAll(hint, ynPane);
+            }
+        }
+
+        private void giveAHint() {
+            final int MAX_THRESHOLDGUESSES = 9;
+            final int MAX_THRESHOLDLENGTH = 6;
+            System.out.println();
+
+            final int num1 = (int)(Math.random()*lengthOfDigits);
+            int num2 = (int)(Math.random()*lengthOfDigits);
+            final int choice = (int)(Math.random()*10);
+            if(choice<=7){
+                //Give two random digits in compList
+                if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
+                    while(num1==num2)
+                        num2 = (int)(Math.random()*lengthOfDigits);
+                    System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
+                }
+                //Give hint of a digit and the place it is in
+                else if(attemptsMade>MAX_THRESHOLDGUESSES)
+                    System.out.println(compList[num1]+" is in index "+num1);
+                //Give a random digit in compList
+                else
+                    System.out.println(compList[num1]+" is in the computers list");
+            }
+            else{
+                int sum = 0;
+                for (int i : compList) {
+                    sum+=i;
+                }
+                System.out.println("The check sum of the Computers digits is: "+sum);
+            }
+        }
+
+        private void setHintsBox() {
+
+
+            rootPane.setLeft(hintPane);
+        }
+
+        private void finishGame(boolean wOrL) {
+            
+        }
+
 
     }
     

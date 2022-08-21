@@ -225,7 +225,7 @@ public class MasterMind extends Application {
 
                 userInputs.add(new ArrayList<>());
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    userInputs.get(attemptsMade).add(Integer.parseInt(tfList.get(i).getText()));
+                    userInputs.get(attemptsMade).add(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                 }
 

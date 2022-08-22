@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class MasterMind extends Application {
@@ -182,6 +183,7 @@ public class MasterMind extends Application {
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
         private int attemptsMade;
+        private boolean gethint = true;
         private VBox centerPane;
         private HBox inputsPane;
         private VBox hintPane;
@@ -209,7 +211,9 @@ public class MasterMind extends Application {
         public void displayEnvironment() {
             Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
 
-            Label message = new Label("Enter a random string of numbers of length "+lengthOfDigits);
+            Label message = new Label();
+            message.setTextAlignment(TextAlignment.CENTER);
+            messages(message);
 
             for(int i = 0; i < lengthOfDigits; i++) {
                 TextField tf = new TextField();
@@ -227,6 +231,7 @@ public class MasterMind extends Application {
                 for(int i = 0; i < lengthOfDigits; i++) {
                     userInputs.get(attemptsMade).add(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
+                    // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
 
                 
@@ -237,10 +242,11 @@ public class MasterMind extends Application {
                 else if(attemptsMade==guessesAllowed) {
                     finishGame(false);
                 }
-                messages(message);
+                // need to add else here
                 attemptsMade++;
+                System.out.println(attemptsMade);
+                messages(message);
             });
-
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
         }
 
@@ -278,28 +284,30 @@ public class MasterMind extends Application {
 
         private void messages(Label message) {
             if(attemptsMade==0){
-                message.setText("Welcome to Master Mind\n"
-                                + "Each digit in the hidden set of digits are unique from the rest and are in random positions");
+                message.setText("Welcome to Master Mind"
+                                + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
+                                + "\nStart by entering a random digit into each box all different from one another.");
             }
-            else if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
-                centerPane.getChildren().removeAll();
+            else if(attemptsMade==3||attemptsMade==6||attemptsMade>9&&gethint){
+                centerPane.getChildren().clear();
+                gethint = false;
 
                 Label hint = new Label("Do you want a hint?");
 
                 HBox ynPane = new HBox(20);
-                Button yes = new Button();
-                yes.setOnAction(e -> {
-                    giveAHint();
-                    centerPane.getChildren().removeAll();
-                    displayEnvironment();
-                });
-                Button no = new Button();
-                no.setOnAction(e -> {
-                    centerPane.getChildren().removeAll();
-                    displayEnvironment();
-                });
+                ynPane.setAlignment(Pos.CENTER);
+
+                Button yes = new Button("Yes");
+                yes.setOnAction(new ynSelection());
+
+                Button no = new Button("No");
+                no.setOnAction(new ynSelection());
+
                 ynPane.getChildren().addAll(yes, no);
                 centerPane.getChildren().addAll(hint, ynPane);
+            }
+            else {
+                message.setText("Enter one random digit into each box all different from one another."+lengthOfDigits);
             }
         }
 
@@ -345,6 +353,22 @@ public class MasterMind extends Application {
         }
 
 
+        class ynSelection implements EventHandler<ActionEvent>{
+
+            @Override
+            public void handle(ActionEvent e) {
+
+                centerPane.getChildren().clear();
+                if(e.getTarget().toString().compareTo("Yes")==-23) {
+                    giveAHint();
+                }
+                displayEnvironment();
+                gethint = true;
+            }
+        }
+
+
     }
+
     
 }

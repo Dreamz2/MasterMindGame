@@ -183,7 +183,6 @@ public class MasterMind extends Application {
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
         private int attemptsMade;
-        private boolean gethint = true;
         private VBox centerPane;
         private HBox inputsPane;
         private VBox hintPane;
@@ -210,8 +209,12 @@ public class MasterMind extends Application {
 
         public void displayEnvironment() {
             Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
+            guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
+            guessesLeftLabel.setTextFill(Color.WHITE);
 
             Label message = new Label();
+            message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
+            message.setTextFill(Color.WHITE);
             message.setTextAlignment(TextAlignment.CENTER);
             messages(message);
 
@@ -244,8 +247,11 @@ public class MasterMind extends Application {
                 }
                 // need to add else here
                 attemptsMade++;
-                System.out.println(attemptsMade);
+                if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
+                    askHint();
+                }
                 messages(message);
+                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
             });
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
         }
@@ -288,27 +294,30 @@ public class MasterMind extends Application {
                                 + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
                                 + "\nStart by entering a random digit into each box all different from one another.");
             }
-            else if(attemptsMade==3||attemptsMade==6||attemptsMade>9&&gethint){
-                centerPane.getChildren().clear();
-                gethint = false;
-
-                Label hint = new Label("Do you want a hint?");
-
-                HBox ynPane = new HBox(20);
-                ynPane.setAlignment(Pos.CENTER);
-
-                Button yes = new Button("Yes");
-                yes.setOnAction(new ynSelection());
-
-                Button no = new Button("No");
-                no.setOnAction(new ynSelection());
-
-                ynPane.getChildren().addAll(yes, no);
-                centerPane.getChildren().addAll(hint, ynPane);
-            }
             else {
-                message.setText("Enter one random digit into each box all different from one another."+lengthOfDigits);
+                message.setText("Enter one random digit into each box all \n digits different from one another."+lengthOfDigits);
             }
+        }
+
+        private void askHint() {
+
+            centerPane.getChildren().clear();
+            inputsPane.getChildren().clear();
+            tfList.clear();
+
+            Label hint = new Label("Do you want a hint?");
+
+            HBox ynPane = new HBox(20);
+            ynPane.setAlignment(Pos.CENTER);
+
+            Button yes = new Button("Yes");
+            yes.setOnAction(new ynSelection());
+
+            Button no = new Button("No");
+            no.setOnAction(new ynSelection());
+
+            ynPane.getChildren().addAll(yes, no);
+            centerPane.getChildren().addAll(hint, ynPane);
         }
 
         private void giveAHint() {
@@ -363,7 +372,6 @@ public class MasterMind extends Application {
                     giveAHint();
                 }
                 displayEnvironment();
-                gethint = true;
             }
         }
 

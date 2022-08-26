@@ -186,14 +186,18 @@ public class MasterMind extends Application {
         private VBox centerPane;
         private HBox inputsPane;
         private VBox hintPane;
+        private String hintMessage = "";
         private ArrayList<TextField> tfList = new ArrayList<>();
-        private int[] compList;
-        private ArrayList<ArrayList<Integer>> userInputs = new ArrayList<>();
+        private Computer compList;
+        private ArrayList<Player> player;
 
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
+            player = new ArrayList<>();
+            player.get(0).test();
             attemptsMade = 0;
+            // compList = new Computer(lengthOfDigits);
             compList = getRandom(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
@@ -228,6 +232,7 @@ public class MasterMind extends Application {
             }
 
             Button submitBtn = new Button("Submit");
+            centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
                 userInputs.add(new ArrayList<>());
@@ -253,7 +258,6 @@ public class MasterMind extends Application {
                 messages(message);
                 guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
             });
-            centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
         }
 
         private boolean checkGuess() {

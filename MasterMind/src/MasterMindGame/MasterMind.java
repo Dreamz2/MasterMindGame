@@ -186,15 +186,18 @@ public class MasterMind extends Application {
         private VBox centerPane;
         private HBox inputsPane;
         private VBox hintPane;
+        private String hintMessage = "";
         private ArrayList<TextField> tfList = new ArrayList<>();
-        private int[] compList;
-        private ArrayList<ArrayList<Integer>> userInputs = new ArrayList<>();
+        private Computer compList;
+        private ArrayList<Player> player;
 
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
+            player = new ArrayList<>();
+            // player.get(0).test();
             attemptsMade = 0;
-            compList = getRandom(lengthOfDigits);
+            compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(5);
@@ -228,11 +231,12 @@ public class MasterMind extends Application {
             }
 
             Button submitBtn = new Button("Submit");
+            centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                userInputs.add(new ArrayList<>());
+                player.add(new Player(lengthOfDigits));
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    userInputs.get(attemptsMade).add(Integer.parseInt(tfList.get(i).getText().toString()));
+                    player.get(attemptsMade).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
@@ -253,49 +257,27 @@ public class MasterMind extends Application {
                 messages(message);
                 guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
             });
-            centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
         }
 
         private boolean checkGuess() {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(userInputs.get(attemptsMade).get(i)==compList[i])
+                if(player.get(attemptsMade).get(i)==compList.get(i))
                     correct++;
             }
     
             return(correct==lengthOfDigits);
         }
 
-        private int[] getRandom(final int length) {
-            int[] list = new int[length];
-            int num;
-    
-            for(int i=0; i<length; i++){
-                int x = 0;
-                num = (int)(Math.random()*10);
-                while(x<i){
-                    if(list[x]==num){
-                        num = (int)(Math.random()*10);
-                        x=0;
-                    }
-                    else
-                        x++;
-                }
-                list[i] = num;
-            }
-            
-            return list;
-        }
-
         private void messages(Label message) {
             if(attemptsMade==0){
                 message.setText("Welcome to Master Mind"
                                 + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
-                                + "\nStart by entering a random digit into each box all different from one another.");
+                                + "\nStart by entering a digit into each box all different from one another.");
             }
             else {
-                message.setText("Enter one random digit into each box all \n digits different from one another."+lengthOfDigits);
+                message.setText("Enter a digit into each box all \n digits different from one another.");
             }
         }
 
@@ -320,36 +302,36 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(hint, ynPane);
         }
 
-        private void giveAHint() {
-            final int MAX_THRESHOLDGUESSES = 9;
-            final int MAX_THRESHOLDLENGTH = 6;
-            System.out.println();
+        // private void giveAHint() {
+        //     final int MAX_THRESHOLDGUESSES = 9;
+        //     final int MAX_THRESHOLDLENGTH = 6;
+        //     System.out.println();
 
-            final int num1 = (int)(Math.random()*lengthOfDigits);
-            int num2 = (int)(Math.random()*lengthOfDigits);
-            final int choice = (int)(Math.random()*10);
-            if(choice<=7){
-                //Give two random digits in compList
-                if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
-                    while(num1==num2)
-                        num2 = (int)(Math.random()*lengthOfDigits);
-                    System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
-                }
-                //Give hint of a digit and the place it is in
-                else if(attemptsMade>MAX_THRESHOLDGUESSES)
-                    System.out.println(compList[num1]+" is in index "+num1);
-                //Give a random digit in compList
-                else
-                    System.out.println(compList[num1]+" is in the computers list");
-            }
-            else{
-                int sum = 0;
-                for (int i : compList) {
-                    sum+=i;
-                }
-                System.out.println("The check sum of the Computers digits is: "+sum);
-            }
-        }
+        //     final int num1 = (int)(Math.random()*lengthOfDigits);
+        //     int num2 = (int)(Math.random()*lengthOfDigits);
+        //     final int choice = (int)(Math.random()*10);
+        //     if(choice<=7){
+        //         //Give two random digits in compList
+        //         if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
+        //             while(num1==num2)
+        //                 num2 = (int)(Math.random()*lengthOfDigits);
+        //             System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
+        //         }
+        //         //Give hint of a digit and the place it is in
+        //         else if(attemptsMade>MAX_THRESHOLDGUESSES)
+        //             System.out.println(compList[num1]+" is in index "+num1);
+        //         //Give a random digit in compList
+        //         else
+        //             System.out.println(compList[num1]+" is in the computers list");
+        //     }
+        //     else{
+        //         int sum = 0;
+        //         for (int i : compList) {
+        //             sum+=i;
+        //         }
+        //         System.out.println("The check sum of the Computers digits is: "+sum);
+        //     }
+        // }
 
         private void setHintsBox() {
 
@@ -357,7 +339,7 @@ public class MasterMind extends Application {
             rootPane.setLeft(hintPane);
         }
 
-        private void finishGame(boolean wOrL) {
+        private void finishGame(boolean finalResult) {
             
         }
 
@@ -369,7 +351,7 @@ public class MasterMind extends Application {
 
                 centerPane.getChildren().clear();
                 if(e.getTarget().toString().compareTo("Yes")==-23) {
-                    giveAHint();
+                    // giveAHint();
                 }
                 displayEnvironment();
             }

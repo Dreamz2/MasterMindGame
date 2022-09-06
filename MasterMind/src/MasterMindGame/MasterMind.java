@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Border;
@@ -24,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -185,7 +187,7 @@ public class MasterMind extends Application {
         private int attemptsMade;
         private VBox centerPane;
         private HBox inputsPane;
-        private VBox hintPane;
+        private Text hints;
         private String hintMessage = "";
         private ArrayList<TextField> tfList = new ArrayList<>();
         private Computer compList;
@@ -202,7 +204,7 @@ public class MasterMind extends Application {
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(5);
             inputsPane.setAlignment(Pos.CENTER);
-            hintPane = new VBox(5);
+            hints = new Text();
 
             displayEnvironment();
             setHintsBox();
@@ -334,6 +336,14 @@ public class MasterMind extends Application {
         // }
 
         private void setHintsBox() {
+            VBox hintPane = new VBox(5);
+            hintPane.setStyle("-fx-border-color: white");
+            
+            Label hintTitle = new Label("Hints");
+            hintTitle.setAlignment(Pos.CENTER);
+
+            hintMessage = "";
+
 
 
             rootPane.setLeft(hintPane);

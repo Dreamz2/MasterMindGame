@@ -11,8 +11,8 @@ public class Player {
 
     }
 
-    public void addInputs() {
-        
+    public void addInputs(int input) {
+        userInputs.add(input);
     }
 
     public int get(int index) {

@@ -30,4 +30,8 @@ public class Computer {
         return list;
     }
 
+    public int get(int index) {
+        return digits[index];
+    }
+
 }

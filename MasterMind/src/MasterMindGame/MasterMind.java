@@ -184,7 +184,7 @@ public class MasterMind extends Application {
         
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
-        private int attemptsMade;
+        private int gamesPlayed; // Number of Games the player has played
         private VBox centerPane;
         private HBox inputsPane;
         private Text hints;
@@ -196,9 +196,9 @@ public class MasterMind extends Application {
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
+            gamesPlayed = 0;
             player = new ArrayList<>();
             // player.get(0).test();
-            attemptsMade = 0;
             compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
@@ -213,10 +213,10 @@ public class MasterMind extends Application {
         }
 
         public void displayEnvironment() {
-            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
+            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-player.get(gamesPlayed).getAttempt()));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
-
+            
             Label message = new Label();
             message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             message.setTextFill(Color.WHITE);
@@ -238,7 +238,7 @@ public class MasterMind extends Application {
 
                 player.add(new Player(lengthOfDigits));
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.get(attemptsMade).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
+                    player.get(player.get(gamesPlayed).getAttempt()).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
@@ -248,16 +248,16 @@ public class MasterMind extends Application {
                 if(checkGuess()){
                     finishGame(true);
                 }
-                else if(attemptsMade==guessesAllowed) {
+                else if(player.get(gamesPlayed).getAttempt()==guessesAllowed) {
                     finishGame(false);
                 }
                 // need to add else here
-                attemptsMade++;
-                if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
+                player.get(gamesPlayed).addAttempt();;
+                if(player.get(gamesPlayed).getAttempt()==3||player.get(gamesPlayed).getAttempt()==6||player.get(gamesPlayed).getAttempt()>9){
                     askHint();
                 }
                 messages(message);
-                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
+                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-player.get(gamesPlayed).getAttempt()));
             });
         }
 
@@ -265,7 +265,7 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(attemptsMade).get(i)==compList.get(i))
+                if(player.get(player.get(gamesPlayed).getAttempt()).get(i)==compList.get(i))
                     correct++;
             }
     
@@ -273,7 +273,7 @@ public class MasterMind extends Application {
         }
 
         private void messages(Label message) {
-            if(attemptsMade==0){
+            if(player.get(gamesPlayed).getAttempt()==0){
                 message.setText("Welcome to Master Mind"
                                 + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
                                 + "\nStart by entering a digit into each box all different from one another.");

@@ -13,13 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -184,11 +185,11 @@ public class MasterMind extends Application {
         
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
-        private int gamesPlayed; // Number of Games the player has played
+        private int attemptsMade; // Number of Attempts made from user input
         private VBox centerPane;
         private HBox inputsPane;
         private Text hints;
-        private String hintMessage = "";
+        private String hintMessage;
         private ArrayList<TextField> tfList = new ArrayList<>();
         private Computer compList;
         private ArrayList<Player> player;
@@ -196,9 +197,10 @@ public class MasterMind extends Application {
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
-            gamesPlayed = 0;
+            attemptsMade = 0;
             player = new ArrayList<>();
             // player.get(0).test();
+            hintMessage = "";
             compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
@@ -213,10 +215,10 @@ public class MasterMind extends Application {
         }
 
         public void displayEnvironment() {
-            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-player.get(gamesPlayed).getAttempt()));
+            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
-            
+
             Label message = new Label();
             message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             message.setTextFill(Color.WHITE);
@@ -238,7 +240,7 @@ public class MasterMind extends Application {
 
                 player.add(new Player(lengthOfDigits));
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.get(player.get(gamesPlayed).getAttempt()).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
+                    player.get(attemptsMade).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
@@ -248,16 +250,16 @@ public class MasterMind extends Application {
                 if(checkGuess()){
                     finishGame(true);
                 }
-                else if(player.get(gamesPlayed).getAttempt()==guessesAllowed) {
+                else if(attemptsMade==guessesAllowed) {
                     finishGame(false);
                 }
                 // need to add else here
-                player.get(gamesPlayed).addAttempt();;
-                if(player.get(gamesPlayed).getAttempt()==3||player.get(gamesPlayed).getAttempt()==6||player.get(gamesPlayed).getAttempt()>9){
+                attemptsMade++;
+                if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
                     askHint();
                 }
                 messages(message);
-                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-player.get(gamesPlayed).getAttempt()));
+                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
             });
         }
 
@@ -265,7 +267,7 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(player.get(gamesPlayed).getAttempt()).get(i)==compList.get(i))
+                if(player.get(attemptsMade).get(i)==compList.get(i))
                     correct++;
             }
     
@@ -273,10 +275,10 @@ public class MasterMind extends Application {
         }
 
         private void messages(Label message) {
-            if(player.get(gamesPlayed).getAttempt()==0){
+            if(attemptsMade==0){
                 message.setText("Welcome to Master Mind"
-                                + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
-                                + "\nStart by entering a digit into each box all different from one another.");
+                                + "\nEach digit in the hidden set of digits are unique \nfrom the rest and are in random positions."
+                                + "\nStart by entering a digit into each box all different \nfrom one another.");
             }
             else {
                 message.setText("Enter a digit into each box all \n digits different from one another.");
@@ -336,17 +338,32 @@ public class MasterMind extends Application {
         // }
 
         private void setHintsBox() {
-            VBox hintPane = new VBox(5);
-            hintPane.setStyle("-fx-border-color: white");
+            Pane hintPane = new Pane();
+            hintPane.setLayoutX(15);
+            hintPane.setLayoutY(160);
             
             Label hintTitle = new Label("Hints");
+            hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 15));
+            hintTitle.setTextFill(Color.WHITE);
+            hintTitle.setLayoutX(15);
             hintTitle.setAlignment(Pos.CENTER);
 
-            hintMessage = "";
+            Pane hintMessagePane = new Pane();
+            hintMessagePane.setStyle("-fx-border-color: white");
+            hintMessagePane.setBackground(Background.fill(Color.BLANCHEDALMOND));
+            hintMessagePane.setLayoutX(-10);
+            hintMessagePane.setLayoutY(20);
+            hintMessagePane.setMinSize(75, 150);
+            hintMessagePane.setMaxSize(80, 200);
 
+            hints.setText(hintMessage);
+            hints.setLayoutY(10);
+            hints.setWrappingWidth(80);
 
+            hintMessagePane.getChildren().add(hints);
+            hintPane.getChildren().addAll(hintTitle, hintMessagePane);
 
-            rootPane.setLeft(hintPane);
+            rootPane.getChildren().add(hintPane);
         }
 
         private void finishGame(boolean finalResult) {

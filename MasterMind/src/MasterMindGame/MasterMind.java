@@ -287,7 +287,6 @@ public class MasterMind extends Application {
         }
 
         private void askHint() {
-
             centerPane.getChildren().clear();
             inputsPane.getChildren().clear();
             tfList.clear();
@@ -323,12 +322,12 @@ public class MasterMind extends Application {
             hintMessagePane.setBackground(Background.fill(Color.BLANCHEDALMOND));
             hintMessagePane.setLayoutX(-10);
             hintMessagePane.setLayoutY(20);
-            hintMessagePane.setMinSize(75, 150);
-            hintMessagePane.setMaxSize(80, 200);
+            hintMessagePane.setMinSize(80, 150);
+            hintMessagePane.setMaxSize(90, 200);
 
             hints.setText(Hint.getHint());
             hints.setLayoutY(10);
-            hints.setWrappingWidth(80);
+            hints.setWrappingWidth(90);
 
             hintMessagePane.getChildren().add(hints);
             hintPane.getChildren().addAll(hintTitle, hintMessagePane);
@@ -349,6 +348,7 @@ public class MasterMind extends Application {
                 centerPane.getChildren().clear();
                 if(e.getTarget().toString().compareTo("Yes")==-23) {
                     Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
+                    hints.setText(Hint.getHint());
                 }
                 displayEnvironment();
             }

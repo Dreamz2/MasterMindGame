@@ -189,18 +189,19 @@ public class MasterMind extends Application {
         private VBox centerPane;
         private HBox inputsPane;
         private Text hints;
-        private String hintMessage;
+        private Hint Hint;
         private ArrayList<TextField> tfList = new ArrayList<>();
         private Computer compList;
-        private ArrayList<Player> player;
+        private Player player;
+        // private ArrayList<Player> player;
 
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
             attemptsMade = 0;
-            player = new ArrayList<>();
+            player = new Player(guessesAllowed, lengthOfDigits);
             // player.get(0).test();
-            hintMessage = "";
+            Hint = new Hint();
             compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
@@ -238,9 +239,9 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                player.add(new Player(lengthOfDigits));
+                player.addArrayList();
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.get(attemptsMade).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
+                    player.addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
@@ -267,7 +268,7 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(attemptsMade).get(i)==compList.get(i))
+                if(player.get(i)==compList.get(i));
                     correct++;
             }
     
@@ -306,37 +307,6 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(hint, ynPane);
         }
 
-        // private void giveAHint() {
-        //     final int MAX_THRESHOLDGUESSES = 9;
-        //     final int MAX_THRESHOLDLENGTH = 6;
-        //     System.out.println();
-
-        //     final int num1 = (int)(Math.random()*lengthOfDigits);
-        //     int num2 = (int)(Math.random()*lengthOfDigits);
-        //     final int choice = (int)(Math.random()*10);
-        //     if(choice<=7){
-        //         //Give two random digits in compList
-        //         if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
-        //             while(num1==num2)
-        //                 num2 = (int)(Math.random()*lengthOfDigits);
-        //             System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
-        //         }
-        //         //Give hint of a digit and the place it is in
-        //         else if(attemptsMade>MAX_THRESHOLDGUESSES)
-        //             System.out.println(compList[num1]+" is in index "+num1);
-        //         //Give a random digit in compList
-        //         else
-        //             System.out.println(compList[num1]+" is in the computers list");
-        //     }
-        //     else{
-        //         int sum = 0;
-        //         for (int i : compList) {
-        //             sum+=i;
-        //         }
-        //         System.out.println("The check sum of the Computers digits is: "+sum);
-        //     }
-        // }
-
         private void setHintsBox() {
             Pane hintPane = new Pane();
             hintPane.setLayoutX(15);
@@ -356,7 +326,7 @@ public class MasterMind extends Application {
             hintMessagePane.setMinSize(75, 150);
             hintMessagePane.setMaxSize(80, 200);
 
-            hints.setText(hintMessage);
+            hints.setText(Hint.getHint());
             hints.setLayoutY(10);
             hints.setWrappingWidth(80);
 
@@ -378,7 +348,7 @@ public class MasterMind extends Application {
 
                 centerPane.getChildren().clear();
                 if(e.getTarget().toString().compareTo("Yes")==-23) {
-                    // giveAHint();
+                    Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
                 }
                 displayEnvironment();
             }

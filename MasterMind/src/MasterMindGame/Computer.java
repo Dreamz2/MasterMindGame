@@ -38,4 +38,8 @@ public class Computer {
         return size;
     }
 
+    public int[] getCompList() {
+        return digits;
+    }
+
 }

@@ -14,7 +14,6 @@ public class Hint {
     public void giveAHint(int[] compList, int lengthOfDigits, int attemptsMade) {
         final int MAX_THRESHOLDGUESSES = 9; // Difficultly
         final int MAX_THRESHOLDLENGTH = 6; // Length of digits needed to guess it over 6
-        System.out.println();
 
         final int num1 = (int)(Math.random()*lengthOfDigits);
         int num2 = (int)(Math.random()*lengthOfDigits);
@@ -24,21 +23,21 @@ public class Hint {
             if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
                 while(num1==num2)
                     num2 = (int)(Math.random()*lengthOfDigits);
-                System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
+                    hint += compList[num1]+" and "+compList[num2]+ " is in the Computers list\n";
             }
             //Give hint of a digit and the place it is in
             else if(attemptsMade>MAX_THRESHOLDGUESSES)
-                System.out.println(compList[num1]+" is in index "+num1);
+                    hint += compList[num1]+" is in index "+num1 +"\n";
             //Give a random digit in compList
             else
-                System.out.println(compList[num1]+" is in the computers list");
+                    hint += compList[num1]+" is in the computers list\n";
         }
         else{
             int sum = 0;
             for (int i : compList) {
                 sum+=i;
             }
-            System.out.println("The check sum of the Computers digits is: "+sum);
+                hint += "The check sum of the Computers digits is: "+sum +"\n";
         }
     }
 }

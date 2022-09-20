@@ -336,7 +336,14 @@ public class MasterMind extends Application {
         }
 
         private void finishGame(boolean finalResult) {
+            centerPane.getChildren().clear();
+            inputsPane.getChildren().clear();
+            tfList.clear();
             
+
+            if(finalResult) {
+                
+            }
         }
 
 

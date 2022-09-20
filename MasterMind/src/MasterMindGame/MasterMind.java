@@ -309,10 +309,10 @@ public class MasterMind extends Application {
             ynPane.setAlignment(Pos.CENTER);
 
             Button yes = new Button("Yes");
-            yes.setOnAction(new HintYN());
+            yes.setOnAction(new HintYes());
 
             Button no = new Button("No");
-            no.setOnAction(new HintYN());
+            no.setOnAction(new HintNo());
 
             ynPane.getChildren().addAll(yes, no);
             centerPane.getChildren().addAll(hint, ynPane);
@@ -370,47 +370,57 @@ public class MasterMind extends Application {
             ynPane.setAlignment(Pos.CENTER);
 
             Button yes = new Button("Yes");
-            yes.setOnAction(new TryAgin());
+            yes.setOnAction(new TryAginYes());
 
             Button no = new Button("No");
-            no.setOnAction(new TryAgin());
+            no.setOnAction(new TryAginNo());
 
             ynPane.getChildren().addAll(yes, no);
             centerPane.getChildren().addAll(messLabel, again, ynPane);
         }
 
 
-        class HintYN implements EventHandler<ActionEvent>{
+        class HintYes implements EventHandler<ActionEvent>{
 
             @Override
             public void handle(ActionEvent e) {
 
                 centerPane.getChildren().clear();
-                if(e.getTarget().toString().compareTo("Yes")==-23) {
-                    Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
-                    hints.setText(Hint.getHint());
-                }
+                Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
+                hints.setText(Hint.getHint());
                 displayEnvironment();
             }
         }
 
-        class TryAgin implements EventHandler<ActionEvent>{
+        class HintNo implements EventHandler<ActionEvent>{
 
             @Override
             public void handle(ActionEvent e) {
 
                 centerPane.getChildren().clear();
-                if(e.getTarget().toString().compareTo("No")==-12) {
-                    rootPane.getChildren().clear();
-                    new Menu(stage);
-                }
-                else {
-                    displayEnvironment();
-                }
+                displayEnvironment();
             }
         }
 
+        class TryAginYes implements EventHandler<ActionEvent>{
 
+            @Override
+            public void handle(ActionEvent e) {
+
+                centerPane.getChildren().clear();
+                displayEnvironment();
+            }
+        }
+        class TryAginNo implements EventHandler<ActionEvent>{
+
+            @Override
+            public void handle(ActionEvent e) {
+
+                centerPane.getChildren().clear();
+                rootPane.getChildren().clear();
+                new Menu(stage);
+            }
+        }
 
     }
 

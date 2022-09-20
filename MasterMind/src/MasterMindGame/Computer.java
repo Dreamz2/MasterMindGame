@@ -1,8 +1,8 @@
 package src.MasterMindGame;
 
 public class Computer {
-    int[] digits;
-    int size;
+    private int[] digits;
+    private int size;
 
     Computer(int size) {
         this.size = size;
@@ -32,6 +32,14 @@ public class Computer {
 
     public int get(int index) {
         return digits[index];
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int[] getCompList() {
+        return digits;
     }
 
 }

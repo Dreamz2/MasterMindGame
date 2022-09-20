@@ -15,15 +15,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -182,27 +185,29 @@ public class MasterMind extends Application {
         
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
-        private int attemptsMade;
+        private int attemptsMade; // Number of Attempts made from user input
         private VBox centerPane;
         private HBox inputsPane;
-        private VBox hintPane;
-        private String hintMessage = "";
+        private Text hints;
+        private Hint Hint;
         private ArrayList<TextField> tfList = new ArrayList<>();
         private Computer compList;
-        private ArrayList<Player> player;
+        private Player player;
+        // private ArrayList<Player> player;
 
         GameHandler(int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
-            player = new ArrayList<>();
-            // player.get(0).test();
             attemptsMade = 0;
+            player = new Player(guessesAllowed, lengthOfDigits);
+            // player.get(0).test();
+            Hint = new Hint();
             compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(5);
             inputsPane.setAlignment(Pos.CENTER);
-            hintPane = new VBox(5);
+            hints = new Text();
 
             displayEnvironment();
             setHintsBox();
@@ -234,9 +239,9 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                player.add(new Player(lengthOfDigits));
+                player.addArrayList();
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.get(attemptsMade).addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
+                    player.addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
@@ -263,7 +268,7 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(attemptsMade).get(i)==compList.get(i))
+                if(player.get(i)==compList.get(i));
                     correct++;
             }
     
@@ -273,8 +278,8 @@ public class MasterMind extends Application {
         private void messages(Label message) {
             if(attemptsMade==0){
                 message.setText("Welcome to Master Mind"
-                                + "\nEach digit in the hidden set of digits are unique from the rest and are in random positions."
-                                + "\nStart by entering a digit into each box all different from one another.");
+                                + "\nEach digit in the hidden set of digits are unique \nfrom the rest and are in random positions."
+                                + "\nStart by entering a digit into each box all different \nfrom one another.");
             }
             else {
                 message.setText("Enter a digit into each box all \n digits different from one another.");
@@ -282,7 +287,6 @@ public class MasterMind extends Application {
         }
 
         private void askHint() {
-
             centerPane.getChildren().clear();
             inputsPane.getChildren().clear();
             tfList.clear();
@@ -302,45 +306,44 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(hint, ynPane);
         }
 
-        // private void giveAHint() {
-        //     final int MAX_THRESHOLDGUESSES = 9;
-        //     final int MAX_THRESHOLDLENGTH = 6;
-        //     System.out.println();
-
-        //     final int num1 = (int)(Math.random()*lengthOfDigits);
-        //     int num2 = (int)(Math.random()*lengthOfDigits);
-        //     final int choice = (int)(Math.random()*10);
-        //     if(choice<=7){
-        //         //Give two random digits in compList
-        //         if(attemptsMade>MAX_THRESHOLDGUESSES&&lengthOfDigits>=MAX_THRESHOLDLENGTH){
-        //             while(num1==num2)
-        //                 num2 = (int)(Math.random()*lengthOfDigits);
-        //             System.out.println(compList[num1]+" and "+compList[num2]+ " is in the Computers list");
-        //         }
-        //         //Give hint of a digit and the place it is in
-        //         else if(attemptsMade>MAX_THRESHOLDGUESSES)
-        //             System.out.println(compList[num1]+" is in index "+num1);
-        //         //Give a random digit in compList
-        //         else
-        //             System.out.println(compList[num1]+" is in the computers list");
-        //     }
-        //     else{
-        //         int sum = 0;
-        //         for (int i : compList) {
-        //             sum+=i;
-        //         }
-        //         System.out.println("The check sum of the Computers digits is: "+sum);
-        //     }
-        // }
-
         private void setHintsBox() {
+            Pane hintPane = new Pane();
+            hintPane.setLayoutX(15);
+            hintPane.setLayoutY(160);
+            
+            Label hintTitle = new Label("Hints");
+            hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 15));
+            hintTitle.setTextFill(Color.WHITE);
+            hintTitle.setLayoutX(15);
+            hintTitle.setAlignment(Pos.CENTER);
 
+            Pane hintMessagePane = new Pane();
+            hintMessagePane.setStyle("-fx-border-color: white");
+            hintMessagePane.setBackground(Background.fill(Color.BLANCHEDALMOND));
+            hintMessagePane.setLayoutX(-10);
+            hintMessagePane.setLayoutY(20);
+            hintMessagePane.setMinSize(80, 150);
+            hintMessagePane.setMaxSize(90, 200);
 
-            rootPane.setLeft(hintPane);
+            hints.setText(Hint.getHint());
+            hints.setLayoutY(10);
+            hints.setWrappingWidth(90);
+
+            hintMessagePane.getChildren().add(hints);
+            hintPane.getChildren().addAll(hintTitle, hintMessagePane);
+
+            rootPane.getChildren().add(hintPane);
         }
 
         private void finishGame(boolean finalResult) {
+            centerPane.getChildren().clear();
+            inputsPane.getChildren().clear();
+            tfList.clear();
             
+
+            if(finalResult) {
+                
+            }
         }
 
 
@@ -351,7 +354,8 @@ public class MasterMind extends Application {
 
                 centerPane.getChildren().clear();
                 if(e.getTarget().toString().compareTo("Yes")==-23) {
-                    // giveAHint();
+                    Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
+                    hints.setText(Hint.getHint());
                 }
                 displayEnvironment();
             }

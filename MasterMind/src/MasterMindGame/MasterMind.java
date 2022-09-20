@@ -45,19 +45,7 @@ public class MasterMind extends Application {
         rootPane = new BorderPane();
         rootPane.setStyle("-fx-background-color: rgb(104, 104, 115)");
 
-        FlowPane topPane = new FlowPane(Orientation.HORIZONTAL);
-        topPane.setPadding(new Insets(15, 10, 10, 10));
-        topPane.setAlignment(Pos.CENTER);
-
-            Label message = new Label("Master Mind");
-            message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 30));
-            message.setTextFill(Color.WHITE);
-        
-        topPane.getChildren().add(message);
-
         new Menu(stage);
-
-        rootPane.setTop(topPane);
 
         Scene scene = new Scene(rootPane, 500, 500);
 		
@@ -74,10 +62,13 @@ public class MasterMind extends Application {
         private int guessesAllowed = 12, lengthOfDigits = 2;
         private boolean cheaterMode = false;
         private VBox centerPane;
+        private Stage stage;
 
         Menu(Stage stage) {
             centerPane = new VBox(30);
             centerPane.setAlignment(Pos.CENTER);
+            this.stage = stage;
+            title();
             for (String name : mainLabels) {
                 Label label = new Label(name);
                 label.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 30));
@@ -106,6 +97,19 @@ public class MasterMind extends Application {
             }
             centerPane.getChildren().addAll(initialMenu);
             rootPane.setCenter(centerPane);
+        }
+
+        private void title() {
+            FlowPane topPane = new FlowPane(Orientation.HORIZONTAL);
+            topPane.setPadding(new Insets(15, 10, 10, 10));
+            topPane.setAlignment(Pos.CENTER);
+    
+                Label message = new Label("Master Mind");
+                message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 30));
+                message.setTextFill(Color.WHITE);
+            
+            topPane.getChildren().add(message);
+            rootPane.setTop(topPane);
         }
 
         private void removeMenu() {
@@ -169,7 +173,7 @@ public class MasterMind extends Application {
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
-                                new GameHandler(lengthOfDigits, guessesAllowed);
+                                new GameHandler(stage, rootPane, lengthOfDigits, guessesAllowed);
                             }
                         }
                         
@@ -183,6 +187,8 @@ public class MasterMind extends Application {
 
     public class GameHandler{
         
+        private Stage stage;
+        private BorderPane rootpane;
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
         private int attemptsMade; // Number of Attempts made from user input
@@ -190,18 +196,20 @@ public class MasterMind extends Application {
         private HBox inputsPane;
         private Text hints;
         private Hint Hint;
+        private Pane hintPane;
         private ArrayList<TextField> tfList = new ArrayList<>();
         private Computer compList;
         private Player player;
         // private ArrayList<Player> player;
 
-        GameHandler(int lengthOfDigits, int guessesAllowed) {
+        GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
             attemptsMade = 0;
             player = new Player(guessesAllowed, lengthOfDigits);
             // player.get(0).test();
             Hint = new Hint();
+            hintPane = new Pane();
             compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
@@ -242,25 +250,27 @@ public class MasterMind extends Application {
                 player.addArrayList();
                 for(int i = 0; i < lengthOfDigits; i++) {
                     player.addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
+                    System.out.println(tfList.get(i).getText().toString());
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
 
-                
-
+                attemptsMade++;
                 if(checkGuess()){
                     finishGame(true);
+                    System.out.println("Nice");
                 }
                 else if(attemptsMade==guessesAllowed) {
                     finishGame(false);
+                    System.out.println(attemptsMade);
                 }
-                // need to add else here
-                attemptsMade++;
-                if(attemptsMade==3||attemptsMade==6||attemptsMade>9){
-                    askHint();
+                else {
+                    if(attemptsMade==3||attemptsMade==6||attemptsMade>=9){
+                        askHint();
+                    }
+                    messages(message);
+                    guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
                 }
-                messages(message);
-                guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
             });
         }
 
@@ -268,8 +278,10 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(i)==compList.get(i));
+                if(player.get(i)==compList.get(i))
                     correct++;
+                System.out.println(player.get(i) + ", " + compList.get(i));
+
             }
     
             return(correct==lengthOfDigits);
@@ -297,17 +309,16 @@ public class MasterMind extends Application {
             ynPane.setAlignment(Pos.CENTER);
 
             Button yes = new Button("Yes");
-            yes.setOnAction(new ynSelection());
+            yes.setOnAction(new HintYN());
 
             Button no = new Button("No");
-            no.setOnAction(new ynSelection());
+            no.setOnAction(new HintYN());
 
             ynPane.getChildren().addAll(yes, no);
             centerPane.getChildren().addAll(hint, ynPane);
         }
 
         private void setHintsBox() {
-            Pane hintPane = new Pane();
             hintPane.setLayoutX(15);
             hintPane.setLayoutY(160);
             
@@ -339,15 +350,37 @@ public class MasterMind extends Application {
             centerPane.getChildren().clear();
             inputsPane.getChildren().clear();
             tfList.clear();
+            hintPane.getChildren().clear();
             
+            Label messLabel = new Label();
+            messLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+            messLabel.setTextFill(Color.WHITE);
 
             if(finalResult) {
-                
+                messLabel.setText("Congratulations You Win");
             }
+            else {
+                messLabel.setText("You Lose");
+            }
+            Label again = new Label("Do you want to play again?");
+            again.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 18));
+            again.setTextFill(Color.WHITE);
+
+            HBox ynPane = new HBox(20);
+            ynPane.setAlignment(Pos.CENTER);
+
+            Button yes = new Button("Yes");
+            yes.setOnAction(new TryAgin());
+
+            Button no = new Button("No");
+            no.setOnAction(new TryAgin());
+
+            ynPane.getChildren().addAll(yes, no);
+            centerPane.getChildren().addAll(messLabel, again, ynPane);
         }
 
 
-        class ynSelection implements EventHandler<ActionEvent>{
+        class HintYN implements EventHandler<ActionEvent>{
 
             @Override
             public void handle(ActionEvent e) {
@@ -360,6 +393,23 @@ public class MasterMind extends Application {
                 displayEnvironment();
             }
         }
+
+        class TryAgin implements EventHandler<ActionEvent>{
+
+            @Override
+            public void handle(ActionEvent e) {
+
+                centerPane.getChildren().clear();
+                if(e.getTarget().toString().compareTo("No")==-12) {
+                    rootPane.getChildren().clear();
+                    new Menu(stage);
+                }
+                else {
+                    displayEnvironment();
+                }
+            }
+        }
+
 
 
     }

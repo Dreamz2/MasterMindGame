@@ -35,6 +35,10 @@ public class Player {
         this.attemptsMade = attemptsMade;
     }
 
+    public void newGame() {
+        gamesPlayed += 1;
+    }
+
     public void test() {
         
     }

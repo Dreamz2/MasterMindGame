@@ -384,7 +384,6 @@ public class MasterMind extends Application {
 
             @Override
             public void handle(ActionEvent e) {
-
                 centerPane.getChildren().clear();
                 Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
                 hints.setText(Hint.getHint());
@@ -396,7 +395,6 @@ public class MasterMind extends Application {
 
             @Override
             public void handle(ActionEvent e) {
-
                 centerPane.getChildren().clear();
                 displayEnvironment();
             }
@@ -406,7 +404,6 @@ public class MasterMind extends Application {
 
             @Override
             public void handle(ActionEvent e) {
-
                 centerPane.getChildren().clear();
                 displayEnvironment();
             }
@@ -415,7 +412,6 @@ public class MasterMind extends Application {
 
             @Override
             public void handle(ActionEvent e) {
-
                 centerPane.getChildren().clear();
                 rootPane.getChildren().clear();
                 new Menu(stage);
@@ -423,6 +419,7 @@ public class MasterMind extends Application {
         }
 
     }
+
 
     
 }

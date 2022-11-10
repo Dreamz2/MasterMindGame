@@ -49,7 +49,7 @@ public class MasterMind extends Application {
         Scene scene = new Scene(rootPane, 500, 500);
 		
 		stage.setScene(scene);
-		stage.setTitle("Master Mind");
+		stage.setTitle("MasterMind");
 		stage.show();
         
     }
@@ -103,7 +103,7 @@ public class MasterMind extends Application {
             topPane.setPadding(new Insets(15, 10, 10, 10));
             topPane.setAlignment(Pos.CENTER);
     
-                Label message = new Label("Master Mind");
+                Label message = new Label("MasterMind");
                 message.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 30));
                 message.setTextFill(Color.WHITE);
             
@@ -123,16 +123,28 @@ public class MasterMind extends Application {
             FlowPane lenNDiffPane = new FlowPane(Orientation.VERTICAL, 0, 30);
             lenNDiffPane.setAlignment(Pos.CENTER);
 
-                FlowPane lenPane = new FlowPane(Orientation.HORIZONTAL, 0, 10);
+                // FlowPane lenPane = new FlowPane(Orientation.HORIZONTAL, 0, 10);
+                VBox lenPane = new VBox(10);
                 lenPane.setAlignment(Pos.CENTER);
 
-                    Label lenLabel = new Label("How many digits to guess? 2 - 9");
+                    Label lenLabel = new Label("How many digits do you want to guess?");
                     lenLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+                    lenLabel.setAlignment(Pos.CENTER);
                     lenLabel.setTextFill(Color.WHITE);
-                    TextField lenText = new TextField("2");
-                    lenText.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 20));
+                    Label lenToEnter = new Label("2 - 9");
+                    lenToEnter.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+                    lenToEnter.setAlignment(Pos.CENTER);
+                    lenToEnter.setTextFill(Color.WHITE);
+                    Pane lenInputPane = new Pane();
+                        TextField lenInputText = new TextField("2");
+                        lenInputText.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 20));
+                        lenInputText.setAlignment(Pos.CENTER);
+                        lenInputText.setLayoutX(200);
+                        lenInputText.setPrefSize(100, 45);
+                    lenInputPane.getChildren().add(lenInputText);
 
-                lenPane.getChildren().addAll(lenLabel, lenText);
+
+                lenPane.getChildren().addAll(lenLabel, lenToEnter, lenInputPane);
 
                 VBox radioPane = new VBox(10);
                 radioPane.setAlignment(Pos.CENTER);
@@ -141,12 +153,15 @@ public class MasterMind extends Application {
                     rad1.setUserData(EASY);
                     rad1.setSelected(true);
                     rad1.setTextFill(Color.WHITE);
+                    rad1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
                     RadioButton rad2 = new RadioButton("9 Guesses - Medium");
                     rad2.setUserData(MEDIUM);
                     rad2.setTextFill(Color.WHITE);
+                    rad2.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
                     RadioButton rad3 = new RadioButton("6 Guesses - Hard");
                     rad3.setUserData(HARD);
                     rad3.setTextFill(Color.WHITE);
+                    rad3.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
 
                     rad1.setToggleGroup(difficulty);
                     rad2.setToggleGroup(difficulty);
@@ -166,9 +181,9 @@ public class MasterMind extends Application {
 
                         @Override
                         public void handle(ActionEvent arg0) {
-                            lengthOfDigits = Integer.parseInt(lenText.getText().toString());
+                            lengthOfDigits = Integer.parseInt(lenInputText.getText().toString());
                             if(lengthOfDigits<2||lengthOfDigits>9) {
-                                lenLabel.setText("Enter Length between 2 - 9");
+                                lenLabel.setText("Enter a Length between");
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
@@ -322,7 +337,7 @@ public class MasterMind extends Application {
             hintPane.setLayoutY(160);
             
             Label hintTitle = new Label("Hints");
-            hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 15));
+            hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 10));
             hintTitle.setTextFill(Color.WHITE);
             hintTitle.setLayoutX(15);
             hintTitle.setAlignment(Pos.CENTER);
@@ -351,31 +366,31 @@ public class MasterMind extends Application {
             tfList.clear();
             hintPane.getChildren().clear();
             
-            Label messLabel = new Label();
-            messLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
-            messLabel.setTextFill(Color.WHITE);
+            Label EndOfGameMessage = new Label();
+            EndOfGameMessage.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+            EndOfGameMessage.setTextFill(Color.WHITE);
 
             if(finalResult) {
-                messLabel.setText("Congratulations You Win");
+                EndOfGameMessage.setText("Congratulations You Win");
             }
             else {
-                messLabel.setText("You Lose");
+                EndOfGameMessage.setText("You Lose");
             }
-            Label again = new Label("Do you want to play again?");
-            again.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 18));
-            again.setTextFill(Color.WHITE);
+            Label PlayAgain = new Label("Do you want to play again?");
+            PlayAgain.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 18));
+            PlayAgain.setTextFill(Color.WHITE);
 
             HBox ynPane = new HBox(20);
             ynPane.setAlignment(Pos.CENTER);
 
-            Button yes = new Button("Yes");
-            yes.setOnAction(new TryAginYes());
+                Button yes = new Button("Yes");
+                yes.setOnAction(new TryAginYes());
 
-            Button no = new Button("No");
-            no.setOnAction(new TryAginNo());
+                Button no = new Button("No");
+                no.setOnAction(new TryAginNo());
 
             ynPane.getChildren().addAll(yes, no);
-            centerPane.getChildren().addAll(messLabel, again, ynPane);
+            centerPane.getChildren().addAll(EndOfGameMessage, PlayAgain, ynPane);
         }
 
 

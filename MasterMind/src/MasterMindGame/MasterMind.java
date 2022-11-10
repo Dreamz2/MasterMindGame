@@ -74,7 +74,6 @@ public class MasterMind extends Application {
                 label.setTextFill(Color.WHITE);
 
                 label.setOnMouseClicked(new EventHandler<Event>() {
-
                     @Override
                     public void handle(Event clicked) {
                         removeMenu();
@@ -88,7 +87,6 @@ public class MasterMind extends Application {
                                 lenNDiff();
                                 break;
                         }
-                        
                     }
                 });
 
@@ -113,10 +111,6 @@ public class MasterMind extends Application {
 
         private void removeMenu() {
             centerPane.getChildren().removeAll(initialMenu);
-        }
-
-        public boolean isCheaterMode() {
-            return cheaterMode;
         }
         
         public void lenNDiff() {
@@ -206,6 +200,7 @@ public class MasterMind extends Application {
         private int lengthOfDigits; // columns
         private int guessesAllowed; // rows
         private int attemptsMade; // Number of Attempts made from user input
+        private boolean cheaterMode;
         private VBox centerPane;
         private HBox inputsPane;
         private Text hints;

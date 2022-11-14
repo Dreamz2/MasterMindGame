@@ -16,15 +16,20 @@ public class Player {
         length = lengthOfDigits;
     }
 
-    public void addInputs(int input) {
-        userInputs.get(gamesPlayed).add(input);
-    }
     public void addArrayList() {
         userInputs.add(new ArrayList<>());
     }
 
+    public void addInput(int input) {
+        userInputs.get(gamesPlayed).add(input);
+    }
+
     public int get(int index) {
         return userInputs.get(gamesPlayed).get(index);
+    }
+
+    public void remove() {
+        userInputs.get(gamesPlayed).remove(userInputs.get(gamesPlayed).size()-1);
     }
 
     public int getAttempt() {
@@ -35,8 +40,32 @@ public class Player {
         this.attemptsMade = attemptsMade;
     }
 
+    public void newGame() {
+        gamesPlayed += 1;
+    }
+    public boolean duplicateInputs() {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if(userInputs.get(gamesPlayed).get(i) == userInputs.get(gamesPlayed).get(j) && i!=j)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public void test() {
         
     }
+    public void print() {
+        System.out.println(userInputs.size() +" games played");
+        System.out.println(userInputs.get(gamesPlayed).size() + " input things");
+        for (int i = 0; i < userInputs.size(); i++) {
+            for (int j = 0; j < userInputs.get(i).size(); j++) {
+                System.out.print(userInputs.get(i).get(j));
+            }
+            System.out.println();
+        }
+    }
+
 
 }

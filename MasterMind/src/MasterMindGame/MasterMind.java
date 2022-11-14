@@ -212,6 +212,7 @@ public class MasterMind extends Application {
         // private ArrayList<Player> player;
 
         GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
+            this.stage = stage;
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
             attemptsMade = 0;
@@ -258,10 +259,13 @@ public class MasterMind extends Application {
 
                 player.addArrayList();
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.addInputs(Integer.parseInt(tfList.get(i).getText().toString()));
-                    System.out.println(tfList.get(i).getText().toString());
+                    player.addInput(tfList.get(i).getText().toString().charAt(0) - '0');
+                    System.out.println(tfList.get(i).getText().toString() + " test ");
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
+                }
+                if(player.duplicateInputs()) {
+                    System.out.println("You suck");
                 }
 
                 attemptsMade++;
@@ -280,6 +284,7 @@ public class MasterMind extends Application {
                     messages(message);
                     guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
                 }
+                player.print();
             });
         }
 
@@ -287,10 +292,9 @@ public class MasterMind extends Application {
             int correct = 0;
             
             for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(i)==compList.get(i))
+                if(player.get(i + lengthOfDigits*(attemptsMade-1))==compList.get(i))
                     correct++;
-                System.out.println(player.get(i) + ", " + compList.get(i));
-
+                System.out.println(player.get(i + lengthOfDigits*(attemptsMade-1)) + ", " + compList.get(i));
             }
     
             return(correct==lengthOfDigits);

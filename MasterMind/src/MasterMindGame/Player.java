@@ -65,21 +65,14 @@ public class Player {
         this.gamesPlayed = gamesPlayed;
     }
 
-    public boolean duplicateInputs() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                if(userInputs.get(attemptsMade).get(i) == userInputs.get(attemptsMade).get(j) && i!=j)
-                    return true;
-            }
-        }
-        return false;
-    }
 
     public void test() {
         System.out.println("TEST");
     }
+
     public void print() {
         System.out.println(userInputs.size() +" games played");
+        System.out.println(getAttemptsMade() + " Attempts made");
         System.out.println(userInputs.get(attemptsMade).size() + " input things");
         for (int i = 0; i < userInputs.size(); i++) {
             for (int j = 0; j < userInputs.get(i).size(); j++) {
@@ -87,6 +80,15 @@ public class Player {
             }
             System.out.println();
         }
+    }
+    public int size1() {
+        return userInputs.size();
+    }
+    public int size2() {
+        return userInputs.get(attemptsMade).size();
+    }
+    public int get2(int i, int j) {
+        return userInputs.get(i).get(j);
     }
 
 

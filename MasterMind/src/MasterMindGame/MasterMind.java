@@ -209,8 +209,8 @@ public class MasterMind extends Application {
         private ArrayList<TextField> tfList = new ArrayList<>();
 
         private PlayerNComp playerVsComp;
-        private Computer compList;
-        private Player player;
+        // private Computer compList;
+        // private Player player;
         // private ArrayList<Player> player;
 
         GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
@@ -221,11 +221,11 @@ public class MasterMind extends Application {
 
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
 
-            player = new Player(guessesAllowed, lengthOfDigits);
+            // player = new Player(guessesAllowed, lengthOfDigits);
+            // compList = new Computer(lengthOfDigits);
             // player.get(0).test();
             Hint = new Hint();
             hintPane = new Pane();
-            compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(5);
@@ -262,18 +262,19 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                player.addList();
+                playerVsComp.addPlayerList();
                 for(int i = 0; i < lengthOfDigits; i++) {
-                    player.addInput(tfList.get(i).getText().toString().charAt(0) - '0');
+                    playerVsComp.addPlayerInput(tfList.get(i).getText().toString().charAt(0) - '0');
                     System.out.println(tfList.get(i).getText().toString() + " test ");
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
-                if(player.duplicateInputs()) {
+                if(playerVsComp.duplicateInputs()) {
                     System.out.println("You suck");
                 }
 
-                attemptsMade++;
+                playerVsComp.addAttemptsMade();
+                // attemptsMade++;
                 if(playerVsComp.checkGuess()){
                     finishGame(true);
                     System.out.println("Nice");
@@ -289,7 +290,7 @@ public class MasterMind extends Application {
                     messages(message);
                     guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
                 }
-                player.print();
+                playerVsComp.print();
             });
         }
 
@@ -391,7 +392,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
+                Hint.giveAHint(playerVsComp.getCompList(), lengthOfDigits, attemptsMade);
                 hints.setText(Hint.getHint());
                 displayEnvironment();
             }

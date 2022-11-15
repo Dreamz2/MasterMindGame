@@ -2,7 +2,7 @@ package src.MasterMindGame;
 
 public class Computer {
     private int[] digits;
-    private int size;
+    private int size; // Length of digits being guessed
 
     Computer(int size) {
         this.size = size;

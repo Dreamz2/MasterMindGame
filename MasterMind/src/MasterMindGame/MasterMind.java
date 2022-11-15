@@ -207,6 +207,8 @@ public class MasterMind extends Application {
         private Hint Hint;
         private Pane hintPane;
         private ArrayList<TextField> tfList = new ArrayList<>();
+
+        private PlayerNComp playerVsComp;
         private Computer compList;
         private Player player;
         // private ArrayList<Player> player;
@@ -216,6 +218,9 @@ public class MasterMind extends Application {
             this.lengthOfDigits = lengthOfDigits;
             this.guessesAllowed = guessesAllowed;
             attemptsMade = 0;
+
+            playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
+
             player = new Player(guessesAllowed, lengthOfDigits);
             // player.get(0).test();
             Hint = new Hint();
@@ -257,7 +262,7 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                player.addArrayList();
+                player.addList();
                 for(int i = 0; i < lengthOfDigits; i++) {
                     player.addInput(tfList.get(i).getText().toString().charAt(0) - '0');
                     System.out.println(tfList.get(i).getText().toString() + " test ");
@@ -269,7 +274,7 @@ public class MasterMind extends Application {
                 }
 
                 attemptsMade++;
-                if(checkGuess()){
+                if(playerVsComp.checkGuess()){
                     finishGame(true);
                     System.out.println("Nice");
                 }
@@ -286,18 +291,6 @@ public class MasterMind extends Application {
                 }
                 player.print();
             });
-        }
-
-        private boolean checkGuess() {
-            int correct = 0;
-            
-            for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(i + lengthOfDigits*(attemptsMade-1))==compList.get(i))
-                    correct++;
-                System.out.println(player.get(i + lengthOfDigits*(attemptsMade-1)) + ", " + compList.get(i));
-            }
-    
-            return(correct==lengthOfDigits);
         }
 
         private void messages(Label message) {

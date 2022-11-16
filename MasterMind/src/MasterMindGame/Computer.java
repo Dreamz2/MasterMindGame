@@ -3,9 +3,11 @@ package src.MasterMindGame;
 public class Computer {
     private int[] digits;
     private int size; // Length of digits being guessed
+    private int sum;
 
     Computer(int size) {
         this.size = size;
+        sum = 0;
         digits = getRandom(size);
     }
 
@@ -24,6 +26,7 @@ public class Computer {
                 else
                     x++;
             }
+            sum += num;
             list[i] = num;
         }
         
@@ -36,6 +39,10 @@ public class Computer {
 
     public int getSize() {
         return size;
+    }
+
+    public int getSum() {
+        return sum;
     }
 
     public int[] getCompList() {

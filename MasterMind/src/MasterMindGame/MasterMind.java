@@ -259,7 +259,6 @@ public class MasterMind extends Application {
                 }
                 // playerVsComp.print();
 
-                // attemptsMade++;
                 if(playerVsComp.checkGuess()){
                     finishGame(true);
                     System.out.println("Nice");

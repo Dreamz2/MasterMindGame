@@ -64,11 +64,15 @@ public class PlayerNComp {
     public boolean duplicateInputs() {
         for (int i = 0; i < getLength(); i++) {
             for (int j = 0; j < getLength(); j++) {
-                if(player.get(gamesPlayed).get(i)== player.get(gamesPlayed).get(j)&& i!=j)
+                if(player.get(gamesPlayed).get(i)==player.get(gamesPlayed).get(j)&& i!=j)
                     return true;
             }
         }
         return false;
+    }
+
+    public void removeList() {
+        player.get(gamesPlayed).remove();
     }
     
 

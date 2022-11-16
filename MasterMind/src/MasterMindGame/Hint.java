@@ -37,7 +37,7 @@ public class Hint {
             for (int i : compList) {
                 sum+=i;
             }
-                hint += "The check sum of the Computers digits is: "+sum +"\n";
+                hint += "The sum of the Computers digits is: "+sum +"\n";
         }
     }
 }

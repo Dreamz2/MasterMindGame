@@ -10,9 +10,13 @@ public class PlayerNComp {
 
     PlayerNComp(int guessesAllowed, int lengthOfDigits) {
         player = new ArrayList<>();
-        player.add(new Player(guessesAllowed, lengthOfDigits));
+        addPlayer(guessesAllowed, lengthOfDigits);
         compList = new Computer(lengthOfDigits);
         gamesPlayed = 0;
+    }
+
+    public void addPlayer(int guessesAllowed, int lengthOfDigits) {
+        player.add(new Player(guessesAllowed, lengthOfDigits));
     }
 
     public int[] getCompList() {
@@ -35,6 +39,10 @@ public class PlayerNComp {
         return player.get(gamesPlayed).getLength();
     }
 
+    public int getAttemptsMade() {
+        return player.get(gamesPlayed).getAttemptsMade();
+    }
+
     public void addAttemptsMade() {
         player.get(gamesPlayed).addAttemptsMade();
     }
@@ -42,7 +50,7 @@ public class PlayerNComp {
     public boolean checkGuess() {
         int correct = 0;
         
-        for(int i=0; i< player.get(gamesPlayed).getLength(); i++){
+        for(int i=0; i< getLength(); i++){
             // if(player.get(i + lengthOfDigits*(attemptsMade-1))==compList.get(i))
             if(player.get(gamesPlayed).get(i)==compList.get(i))
                 correct++;
@@ -70,9 +78,12 @@ public class PlayerNComp {
 
     public void print() {
         System.out.println(player.size() +" games played");
+        System.out.println(gamesPlayed + " games played");
         System.out.println(player.get(gamesPlayed).getAttemptsMade() + " Attempts made");
         System.out.println(player.get(gamesPlayed).size1() + " Thing size");
         System.out.println(player.get(gamesPlayed).size2() + " input size");
+        System.out.println(player.get(gamesPlayed).getLength() + " Length of digits");
+        System.out.println(player.get(gamesPlayed).getGuessesAllowed() + " Guess allowed");
         for (int i = 0; i < player.get(gamesPlayed).size1(); i++) {
             for (int j = 0; j < player.get(gamesPlayed).size2(); j++) {
                 System.out.print(player.get(gamesPlayed).get2(i, j));

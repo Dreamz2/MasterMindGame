@@ -197,9 +197,6 @@ public class MasterMind extends Application {
         
         private Stage stage;
         private BorderPane rootpane;
-        private int lengthOfDigits; // columns
-        private int guessesAllowed; // rows
-        private int attemptsMade; // Number of Attempts made from user input
         private boolean cheaterMode;
         private VBox centerPane;
         private HBox inputsPane;
@@ -207,20 +204,13 @@ public class MasterMind extends Application {
         private Hint Hint;
         private Pane hintPane;
         private ArrayList<TextField> tfList = new ArrayList<>();
-        private Computer compList;
-        private Player player;
-        // private ArrayList<Player> player;
+        private PlayerNComp playerVsComp;
 
         GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
             this.stage = stage;
-            this.lengthOfDigits = lengthOfDigits;
-            this.guessesAllowed = guessesAllowed;
-            attemptsMade = 0;
-            player = new Player(guessesAllowed, lengthOfDigits);
-            // player.get(0).test();
+            playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
             Hint = new Hint();
             hintPane = new Pane();
-            compList = new Computer(lengthOfDigits);
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(5);
@@ -234,7 +224,7 @@ public class MasterMind extends Application {
         }
 
         public void displayEnvironment() {
-            Label guessesLeftLabel = new Label("Guesses Left: " + (guessesAllowed-attemptsMade));
+            Label guessesLeftLabel = new Label("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
 
@@ -244,7 +234,7 @@ public class MasterMind extends Application {
             message.setTextAlignment(TextAlignment.CENTER);
             messages(message);
 
-            for(int i = 0; i < lengthOfDigits; i++) {
+            for(int i = 0; i < playerVsComp.getLength(); i++) {
                 TextField tf = new TextField();
                 tf.setBorder(Border.stroke(Color.BLACK));
                 tf.setMaxSize(30, 25);
@@ -257,51 +247,41 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                player.addArrayList();
-                for(int i = 0; i < lengthOfDigits; i++) {
-                    player.addInput(tfList.get(i).getText().toString().charAt(0) - '0');
+                playerVsComp.addPlayerList();
+                for(int i = 0; i < playerVsComp.getLength(); i++) {
+                    playerVsComp.addPlayerInput(tfList.get(i).getText().toString().charAt(0) - '0');
                     System.out.println(tfList.get(i).getText().toString() + " test ");
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
-                if(player.duplicateInputs()) {
+                if(playerVsComp.duplicateInputs()) {
                     System.out.println("You suck");
                 }
+                // playerVsComp.print();
 
-                attemptsMade++;
-                if(checkGuess()){
+                if(playerVsComp.checkGuess()){
                     finishGame(true);
                     System.out.println("Nice");
                 }
-                else if(attemptsMade==guessesAllowed) {
+                else {
+                    playerVsComp.addAttemptsMade();
+                }
+                if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
                     finishGame(false);
-                    System.out.println(attemptsMade);
+                    System.out.println(playerVsComp.getAttemptsMade());
                 }
                 else {
-                    if(attemptsMade==3||attemptsMade==6||attemptsMade>=9){
+                    if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
                         askHint();
                     }
                     messages(message);
-                    guessesLeftLabel.setText("Guesses Left: " + (guessesAllowed-attemptsMade));
+                    guessesLeftLabel.setText("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
                 }
-                player.print();
             });
         }
 
-        private boolean checkGuess() {
-            int correct = 0;
-            
-            for(int i=0; i<lengthOfDigits; i++){
-                if(player.get(i + lengthOfDigits*(attemptsMade-1))==compList.get(i))
-                    correct++;
-                System.out.println(player.get(i + lengthOfDigits*(attemptsMade-1)) + ", " + compList.get(i));
-            }
-    
-            return(correct==lengthOfDigits);
-        }
-
         private void messages(Label message) {
-            if(attemptsMade==0){
+            if(playerVsComp.getAttemptsMade()==0){
                 message.setText("Welcome to Master Mind"
                                 + "\nEach digit in the hidden set of digits are unique \nfrom the rest and are in random positions."
                                 + "\nStart by entering a digit into each box all different \nfrom one another.");
@@ -398,7 +378,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                Hint.giveAHint(compList.getCompList(), lengthOfDigits, attemptsMade);
+                Hint.giveAHint(playerVsComp.getCompList(), playerVsComp.getLength(), playerVsComp.getAttemptsMade());
                 hints.setText(Hint.getHint());
                 displayEnvironment();
             }

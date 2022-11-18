@@ -254,29 +254,31 @@ public class MasterMind extends Application {
                     tfList.get(i).setText("");
                     // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
-                if(playerVsComp.duplicateInputs()) {
-                    System.out.println("You suck");
-                }
-                // playerVsComp.print();
-
-                if(playerVsComp.checkGuess()){
-                    finishGame(true);
-                    System.out.println("Nice");
-                }
-                else {
-                    playerVsComp.addAttemptsMade();
-                }
-                if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
-                    finishGame(false);
-                    System.out.println(playerVsComp.getAttemptsMade());
-                }
-                else {
-                    if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
-                        askHint();
+                playerVsComp.print();
+                if(!playerVsComp.duplicateInputs()) {
+                    if(playerVsComp.checkGuess()){
+                        finishGame(true);
+                        System.out.println("Nice");
                     }
-                    messages(message);
-                    guessesLeftLabel.setText("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
+                    playerVsComp.addAttemptsMade();
+                    if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
+                        finishGame(false);
+                        System.out.println(playerVsComp.getAttemptsMade());
+                    }
+                    else {
+                        if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
+                            askHint();
+                        }
+                        messages(message);
+                        guessesLeftLabel.setText("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
+                    }
                 }
+                else {
+                    System.out.println("You suck");
+                    playerVsComp.removeList();
+                    duplicate(message);
+                }
+
             });
         }
 
@@ -287,8 +289,11 @@ public class MasterMind extends Application {
                                 + "\nStart by entering a digit into each box all different \nfrom one another.");
             }
             else {
-                message.setText("Enter a digit into each box all \n digits different from one another.");
+                message.setText("Enter a digit into each box all \n different from one another."); //digits
             }
+        }
+        private void duplicate(Label message) {
+            message.setText("Enter digits without any duplicates");
         }
 
         private void askHint() {

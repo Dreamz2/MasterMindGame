@@ -42,7 +42,7 @@ public class Player {
      * If a duplicate is found
      */
     public void remove() {
-        userInputs.get(attemptsMade).remove(userInputs.get(attemptsMade).size()-1);
+        userInputs.remove(userInputs.size()-1);
     }
 
     public int getAttemptsMade() {

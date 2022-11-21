@@ -46,7 +46,7 @@ public class MasterMind extends Application {
 
         new Menu(stage);
 
-        Scene scene = new Scene(rootPane, 500, 500);
+        Scene scene = new Scene(rootPane, 600, 600);
 		
 		stage.setScene(scene);
 		stage.setTitle("MasterMind");
@@ -181,7 +181,7 @@ public class MasterMind extends Application {
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
-                                new GameHandler(stage, rootPane, lengthOfDigits, guessesAllowed);
+                                new GameHandler(stage, rootPane, cheaterMode, lengthOfDigits, guessesAllowed);
                             }
                         }
                         
@@ -206,8 +206,9 @@ public class MasterMind extends Application {
         private ArrayList<TextField> tfList = new ArrayList<>();
         private PlayerNComp playerVsComp;
 
-        GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
+        GameHandler(Stage stage, BorderPane rootpane, boolean cheaterMode, int lengthOfDigits, int guessesAllowed) {
             this.stage = stage;
+            this.cheaterMode = cheaterMode;
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
             Hint = new Hint();
             hintPane = new Pane();

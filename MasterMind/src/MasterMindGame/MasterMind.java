@@ -201,6 +201,7 @@ public class MasterMind extends Application {
         private BorderPane rootpane;
         private boolean cheaterMode;
         private VBox centerPane;
+        private Pane bottomPane;
         private HBox inputsPane;
         private Text hints;
         private Hint Hint;
@@ -210,6 +211,7 @@ public class MasterMind extends Application {
 
         GameHandler(Stage stage, BorderPane rootPane, boolean cheaterMode, int lengthOfDigits, int guessesAllowed) {
             this.stage = stage;
+            // this.rootpane = rootPane;
             this.cheaterMode = cheaterMode;
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
             Hint = new Hint();
@@ -220,15 +222,15 @@ public class MasterMind extends Application {
             inputsPane.setAlignment(Pos.CENTER);
             hints = new Text();
 
-            displayEnvironment(rootPane);
+            displayEnvironment();
             setHintsBox();
             if(cheaterMode)
-                cheaterMode(rootPane);
+                cheaterMode();
 
             rootPane.setCenter(centerPane);
         }
 
-        public void displayEnvironment(BorderPane rootPane) {
+        public void displayEnvironment() {
             Label guessesLeftLabel = new Label("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
@@ -301,8 +303,8 @@ public class MasterMind extends Application {
             message.setText("Enter digits without any duplicates");
         }
 
-        private void cheaterMode(BorderPane rootPane) {
-            Pane bottomPane = new Pane();
+        private void cheaterMode() {
+            bottomPane = new Pane();
             bottomPane.setLayoutX(100);
             bottomPane.setLayoutY(520);
             
@@ -316,7 +318,6 @@ public class MasterMind extends Application {
             displayDigits.setLayoutX(10+155/(playerVsComp.getLength()-1));
             displayDigits.setLayoutY(25);
             for (int i = 0; i < playerVsComp.getLength(); i++) {
-                // For loop for to get the computers list of digits
                 TextField compNumbers = new TextField("" + playerVsComp.getCompDigit(i));
                 compNumbers.setEditable(false);
                 compNumbers.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
@@ -421,7 +422,7 @@ public class MasterMind extends Application {
                 centerPane.getChildren().clear();
                 Hint.giveAHint(playerVsComp.getCompList(), playerVsComp.getLength(), playerVsComp.getAttemptsMade());
                 hints.setText(Hint.getHint());
-                displayEnvironment(rootPane);
+                displayEnvironment();
             }
         }
 
@@ -430,7 +431,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                displayEnvironment(rootPane);
+                displayEnvironment();
             }
         }
 
@@ -439,7 +440,8 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                displayEnvironment(rootPane);
+                bottomPane.getChildren().clear();
+                displayEnvironment();
             }
         }
         class TryAginNo implements EventHandler<ActionEvent>{

@@ -18,6 +18,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -46,7 +48,7 @@ public class MasterMind extends Application {
 
         new Menu(stage);
 
-        Scene scene = new Scene(rootPane, 500, 500);
+        Scene scene = new Scene(rootPane, 600, 600);
 		
 		stage.setScene(scene);
 		stage.setTitle("MasterMind");
@@ -181,7 +183,7 @@ public class MasterMind extends Application {
                             }
                             else {
                                 rootPane.getChildren().removeAll(centerPane, startBtn);
-                                new GameHandler(stage, rootPane, lengthOfDigits, guessesAllowed);
+                                new GameHandler(stage, rootPane, cheaterMode, lengthOfDigits, guessesAllowed);
                             }
                         }
                         
@@ -199,6 +201,7 @@ public class MasterMind extends Application {
         private BorderPane rootpane;
         private boolean cheaterMode;
         private VBox centerPane;
+        private Pane bottomPane;
         private HBox inputsPane;
         private Text hints;
         private Hint Hint;
@@ -206,19 +209,23 @@ public class MasterMind extends Application {
         private ArrayList<TextField> tfList = new ArrayList<>();
         private PlayerNComp playerVsComp;
 
-        GameHandler(Stage stage, BorderPane rootpane, int lengthOfDigits, int guessesAllowed) {
+        GameHandler(Stage stage, BorderPane rootPane, boolean cheaterMode, int lengthOfDigits, int guessesAllowed) {
             this.stage = stage;
+            // this.rootpane = rootPane;
+            this.cheaterMode = cheaterMode;
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
             Hint = new Hint();
             hintPane = new Pane();
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
-            inputsPane = new HBox(5);
+            inputsPane = new HBox(10);
             inputsPane.setAlignment(Pos.CENTER);
             hints = new Text();
 
             displayEnvironment();
             setHintsBox();
+            if(cheaterMode)
+                cheaterMode();
 
             rootPane.setCenter(centerPane);
         }
@@ -296,12 +303,42 @@ public class MasterMind extends Application {
             message.setText("Enter digits without any duplicates");
         }
 
+        private void cheaterMode() {
+            bottomPane = new Pane();
+            bottomPane.setLayoutX(100);
+            bottomPane.setLayoutY(520);
+            
+            Label compListLabel = new Label("Computers Digits");
+            compListLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
+            compListLabel.setTextFill(Color.WHITE);
+            compListLabel.setTextAlignment(TextAlignment.CENTER);
+            compListLabel.setLayoutX(150);
+
+            HBox displayDigits = new HBox(10);
+            displayDigits.setLayoutX(10+155/(playerVsComp.getLength()-1));
+            displayDigits.setLayoutY(25);
+            for (int i = 0; i < playerVsComp.getLength(); i++) {
+                TextField compNumbers = new TextField("" + playerVsComp.getCompDigit(i));
+                compNumbers.setEditable(false);
+                compNumbers.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
+                compNumbers.setStyle("-fx-text-fill: white; -fx-background-color: rgb(104, 104, 115); -fx-border-color: black");
+                compNumbers.setMaxSize(30, 25);
+                displayDigits.getChildren().add(compNumbers);
+            }
+
+            bottomPane.getChildren().addAll(compListLabel, displayDigits);
+            rootPane.getChildren().add(bottomPane);
+        }
+
         private void askHint() {
             centerPane.getChildren().clear();
             inputsPane.getChildren().clear();
             tfList.clear();
 
             Label hint = new Label("Do you want a hint?");
+            // hint.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
+            // hint.setTextFill(Color.WHITE);
+            // hint.setTextAlignment(TextAlignment.CENTER);
 
             HBox ynPane = new HBox(20);
             ynPane.setAlignment(Pos.CENTER);
@@ -403,6 +440,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
+                bottomPane.getChildren().clear();
                 displayEnvironment();
             }
         }

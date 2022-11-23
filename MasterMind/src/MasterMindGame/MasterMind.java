@@ -18,6 +18,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -206,7 +208,7 @@ public class MasterMind extends Application {
         private ArrayList<TextField> tfList = new ArrayList<>();
         private PlayerNComp playerVsComp;
 
-        GameHandler(Stage stage, BorderPane rootpane, boolean cheaterMode, int lengthOfDigits, int guessesAllowed) {
+        GameHandler(Stage stage, BorderPane rootPane, boolean cheaterMode, int lengthOfDigits, int guessesAllowed) {
             this.stage = stage;
             this.cheaterMode = cheaterMode;
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
@@ -214,17 +216,19 @@ public class MasterMind extends Application {
             hintPane = new Pane();
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
-            inputsPane = new HBox(5);
+            inputsPane = new HBox(10);
             inputsPane.setAlignment(Pos.CENTER);
             hints = new Text();
 
-            displayEnvironment();
+            displayEnvironment(rootPane);
             setHintsBox();
+            if(cheaterMode)
+                cheaterMode(rootPane);
 
             rootPane.setCenter(centerPane);
         }
 
-        public void displayEnvironment() {
+        public void displayEnvironment(BorderPane rootPane) {
             Label guessesLeftLabel = new Label("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
@@ -297,12 +301,43 @@ public class MasterMind extends Application {
             message.setText("Enter digits without any duplicates");
         }
 
+        private void cheaterMode(BorderPane rootPane) {
+            Pane bottomPane = new Pane();
+            bottomPane.setLayoutX(200);
+            bottomPane.setLayoutY(520);
+            
+            Label compListLabel = new Label("Computers Digits");
+            compListLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
+            compListLabel.setTextFill(Color.WHITE);
+            compListLabel.setTextAlignment(TextAlignment.CENTER);
+            compListLabel.setLayoutX(50);
+
+            HBox displayDigits = new HBox(10);
+            displayDigits.setLayoutX(65/(playerVsComp.getLength()-1));
+            displayDigits.setLayoutY(25);
+            for (int i = 0; i < playerVsComp.getLength(); i++) {
+                // For loop for to get the computers list of digits
+                TextField compNumbers = new TextField("" + playerVsComp.getCompDigit(i));
+                compNumbers.setEditable(false);
+                compNumbers.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
+                compNumbers.setStyle("-fx-text-fill: white; -fx-background-color: rgb(104, 104, 115); -fx-border-color: black");
+                compNumbers.setMaxSize(30, 25);
+                displayDigits.getChildren().add(compNumbers);
+            }
+
+            bottomPane.getChildren().addAll(compListLabel, displayDigits);
+            rootPane.getChildren().add(bottomPane);
+        }
+
         private void askHint() {
             centerPane.getChildren().clear();
             inputsPane.getChildren().clear();
             tfList.clear();
 
             Label hint = new Label("Do you want a hint?");
+            // hint.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
+            // hint.setTextFill(Color.WHITE);
+            // hint.setTextAlignment(TextAlignment.CENTER);
 
             HBox ynPane = new HBox(20);
             ynPane.setAlignment(Pos.CENTER);
@@ -386,7 +421,7 @@ public class MasterMind extends Application {
                 centerPane.getChildren().clear();
                 Hint.giveAHint(playerVsComp.getCompList(), playerVsComp.getLength(), playerVsComp.getAttemptsMade());
                 hints.setText(Hint.getHint());
-                displayEnvironment();
+                displayEnvironment(rootPane);
             }
         }
 
@@ -395,7 +430,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                displayEnvironment();
+                displayEnvironment(rootPane);
             }
         }
 
@@ -404,7 +439,7 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                displayEnvironment();
+                displayEnvironment(rootPane);
             }
         }
         class TryAginNo implements EventHandler<ActionEvent>{

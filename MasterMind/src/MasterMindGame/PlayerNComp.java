@@ -23,6 +23,10 @@ public class PlayerNComp {
         return compList.getCompList();
     }
 
+    public int getCompDigit(int index) {
+        return compList.get(index);
+    }
+
     public void addPlayerList() {
         player.get(gamesPlayed).addList();
     }

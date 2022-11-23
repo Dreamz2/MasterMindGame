@@ -303,17 +303,17 @@ public class MasterMind extends Application {
 
         private void cheaterMode(BorderPane rootPane) {
             Pane bottomPane = new Pane();
-            bottomPane.setLayoutX(200);
+            bottomPane.setLayoutX(100);
             bottomPane.setLayoutY(520);
             
             Label compListLabel = new Label("Computers Digits");
             compListLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
             compListLabel.setTextFill(Color.WHITE);
             compListLabel.setTextAlignment(TextAlignment.CENTER);
-            compListLabel.setLayoutX(50);
+            compListLabel.setLayoutX(150);
 
             HBox displayDigits = new HBox(10);
-            displayDigits.setLayoutX(65/(playerVsComp.getLength()-1));
+            displayDigits.setLayoutX(10+155/(playerVsComp.getLength()-1));
             displayDigits.setLayoutY(25);
             for (int i = 0; i < playerVsComp.getLength(); i++) {
                 // For loop for to get the computers list of digits

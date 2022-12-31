@@ -213,7 +213,6 @@ public class MasterMind extends Application {
             this.cheaterMode = cheaterMode;
             playerVsComp = new PlayerNComp(guessesAllowed, lengthOfDigits);
             Hint = new Hint();
-            hintPane = new Pane();
             centerPane = new VBox(20);
             centerPane.setAlignment(Pos.CENTER);
             inputsPane = new HBox(10);
@@ -288,7 +287,7 @@ public class MasterMind extends Application {
         }
 
         private void messages(Label message) {
-            if(playerVsComp.getAttemptsMade()==0){
+            if(playerVsComp.getAttemptsMade()==0&&playerVsComp.getGamesPlayed()==0){
                 message.setText("Welcome to Master Mind"
                                 + "\nEach digit in the hidden set of digits are unique \nfrom the rest and are in random positions."
                                 + "\nStart by entering a digit into each box all different \nfrom one another.");
@@ -352,6 +351,7 @@ public class MasterMind extends Application {
         }
 
         private void setHintsBox() {
+            hintPane = new Pane();
             hintPane.setLayoutX(15);
             hintPane.setLayoutY(160);
             
@@ -384,6 +384,8 @@ public class MasterMind extends Application {
             inputsPane.getChildren().clear();
             tfList.clear();
             hintPane.getChildren().clear();
+            if(bottomPane!=null)
+                bottomPane.getChildren().clear();
             
             Label EndOfGameMessage = new Label();
             EndOfGameMessage.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
@@ -451,6 +453,9 @@ public class MasterMind extends Application {
                                     centerPane.getChildren().clear();
                                     playerVsComp.createNewGame(lengthOfDigits);
                                     displayEnvironment();
+                                    setHintsBox();
+                                    if(cheaterMode)
+                                        cheaterMode();
                                 }
                             }
                             
@@ -490,8 +495,6 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                if(bottomPane!=null)
-                    bottomPane.getChildren().clear();
                 LengthPane();
             }
         }

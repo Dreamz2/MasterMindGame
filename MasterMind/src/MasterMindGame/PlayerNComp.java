@@ -53,6 +53,10 @@ public class PlayerNComp {
         return player.get(gamesPlayed).getAttemptsMade();
     }
 
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
     public void addAttemptsMade() {
         player.get(gamesPlayed).addAttemptsMade();
     }
@@ -90,6 +94,7 @@ public class PlayerNComp {
         player.get(gamesPlayed).remove();
     }
     
+    //
 
     public void test() {
         player.get(gamesPlayed).test();

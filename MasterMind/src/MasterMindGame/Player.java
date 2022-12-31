@@ -4,15 +4,11 @@ import java.util.ArrayList;
 
 public class Player {
     private ArrayList<ArrayList<Integer>> userInputs;
-    private int gamesPlayed;
-    private int difficulty; // Number of guesses allowed (guessesAllowed)
     private int length; // Number of digits to guess (lengthOfDigits)
     private int attemptsMade; // Number of attempts made to guest the Computers list
 
-    Player(int difficulty, int lengthOfDigits) {
+    Player(int lengthOfDigits) {
         userInputs = new ArrayList<>();
-        gamesPlayed = 0;
-        this.difficulty = difficulty;
         length = lengthOfDigits;
     }
 
@@ -53,18 +49,11 @@ public class Player {
         attemptsMade+=1;
     }
 
-    public int getGuessesAllowed() {
-        return difficulty;
-    }
-
     public int getLength() {
         return length;
     }
 
-    public void gamesPalyed(int gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
-    }
-
+    // //
 
     public void test() {
         System.out.println("TEST");

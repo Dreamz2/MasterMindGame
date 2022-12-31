@@ -18,8 +18,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -414,6 +412,58 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(EndOfGameMessage, PlayAgain, ynPane);
         }
 
+        private void LengthPane() {
+            FlowPane lenNDiffPane = new FlowPane(Orientation.VERTICAL, 0, 30);
+            lenNDiffPane.setAlignment(Pos.CENTER);
+
+                // FlowPane lenPane = new FlowPane(Orientation.HORIZONTAL, 0, 10);
+                VBox lenPane = new VBox(10);
+                lenPane.setAlignment(Pos.CENTER);
+
+                    Label lenLabel = new Label("How many digits do you want to guess?");
+                    lenLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+                    lenLabel.setAlignment(Pos.CENTER);
+                    lenLabel.setTextFill(Color.WHITE);
+                    Label lenToEnter = new Label("2 - 9");
+                    lenToEnter.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
+                    lenToEnter.setAlignment(Pos.CENTER);
+                    lenToEnter.setTextFill(Color.WHITE);
+                    Pane lenInputPane = new Pane();
+                        TextField lenInputText = new TextField("2");
+                        lenInputText.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 20));
+                        lenInputText.setAlignment(Pos.CENTER);
+                        lenInputText.setLayoutX(200);
+                        lenInputText.setPrefSize(100, 45);
+                    lenInputPane.getChildren().add(lenInputText);
+                
+                    FlowPane btnPane = new FlowPane(Orientation.HORIZONTAL);
+                    btnPane.setAlignment(Pos.CENTER);
+                        Button startBtn = new Button("Start Game");
+                        startBtn.setOnAction(new EventHandler<ActionEvent>() {
+    
+                            @Override
+                            public void handle(ActionEvent arg0) {
+                                int lengthOfDigits = Integer.parseInt(lenInputText.getText().toString());
+                                if(lengthOfDigits<2||lengthOfDigits>9) {
+                                    lenLabel.setText("Enter a Length between");
+                                }
+                                else {
+                                    centerPane.getChildren().clear();
+                                    playerVsComp.createNewGame(lengthOfDigits);
+                                    displayEnvironment();
+                                }
+                            }
+                            
+                        });
+                    btnPane.getChildren().add(startBtn);
+
+
+                lenPane.getChildren().addAll(lenLabel, lenToEnter, lenInputPane);
+            
+            lenNDiffPane.getChildren().addAll(lenPane, btnPane);
+            centerPane.getChildren().addAll(lenNDiffPane);
+        }
+
 
         class HintYes implements EventHandler<ActionEvent>{
 
@@ -440,8 +490,9 @@ public class MasterMind extends Application {
             @Override
             public void handle(ActionEvent e) {
                 centerPane.getChildren().clear();
-                bottomPane.getChildren().clear();
-                displayEnvironment();
+                if(bottomPane!=null)
+                    bottomPane.getChildren().clear();
+                LengthPane();
             }
         }
         class TryAginNo implements EventHandler<ActionEvent>{

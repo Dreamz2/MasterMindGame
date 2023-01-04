@@ -76,7 +76,8 @@ public class PlayerNComp {
             // System.out.println(player.get(i + lengthOfDigits*(attemptsMade-1)) + ", " + compList.get(i));
             System.out.println(player.get(gamesPlayed).get(i) + ", " + compList.get(gamesPlayed).get(i));
         }
-
+        
+        addAttemptsMade();
         return(correct==player.get(gamesPlayed).getLength());
     }
 

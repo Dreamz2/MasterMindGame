@@ -262,10 +262,9 @@ public class MasterMind extends Application {
                 if(!playerVsComp.duplicateInputs()) {
                     if(playerVsComp.checkGuess()){
                         finishGame(true);
-                        System.out.println("Nice");
+                        System.out.println("Congratulations");
                     }
-                    playerVsComp.addAttemptsMade();
-                    if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
+                    else if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
                         finishGame(false);
                         System.out.println(playerVsComp.getAttemptsMade());
                     }
@@ -278,7 +277,7 @@ public class MasterMind extends Application {
                     }
                 }
                 else {
-                    System.out.println("You suck");
+                    System.out.println("Duplicate");
                     playerVsComp.removeList();
                     duplicate(message);
                 }

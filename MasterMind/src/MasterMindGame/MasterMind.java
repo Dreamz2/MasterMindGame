@@ -251,39 +251,54 @@ public class MasterMind extends Application {
             centerPane.getChildren().addAll(guessesLeftLabel, message, inputsPane, submitBtn);
             submitBtn.setOnAction(e -> {
 
-                playerVsComp.addPlayerList();
-                for(int i = 0; i < playerVsComp.getLength(); i++) {
-                    playerVsComp.addPlayerInput(tfList.get(i).getText().toString().charAt(0) - '0');
-                    System.out.println(tfList.get(i).getText().toString() + " test ");
-                    tfList.get(i).setText("");
-                    // System.out.println(userInputs.get(attemptsMade).get(i));
-                }
-                playerVsComp.print();
-                if(!playerVsComp.duplicateInputs()) {
-                    if(playerVsComp.checkGuess()){
-                        finishGame(true);
-                        System.out.println("Congratulations");
+                if(!isemptyNisLetter()){
+                    playerVsComp.addPlayerList();
+                    for(int i = 0; i < playerVsComp.getLength(); i++) {
+                        playerVsComp.addPlayerInput(tfList.get(i).getText().toString().charAt(0) - '0');
+                        System.out.println(tfList.get(i).getText().toString() + " test ");
+                        tfList.get(i).setText("");
+                        // System.out.println(userInputs.get(attemptsMade).get(i));
                     }
-                    else if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
-                        finishGame(false);
-                        System.out.println(playerVsComp.getAttemptsMade());
+                    playerVsComp.print();
+                    if(!playerVsComp.duplicateInputs()) {
+                        if(playerVsComp.checkGuess()){
+                            finishGame(true);
+                            System.out.println("Congratulations");
+                        }
+                        else if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
+                            finishGame(false);
+                            System.out.println(playerVsComp.getAttemptsMade());
+                        }
+                        else {
+                            if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
+                                askHint();
+                            }
+                            messages(message);
+                            guessesLeftLabel.setText("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
+                        }
                     }
                     else {
-                        if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
-                            askHint();
-                        }
-                        messages(message);
-                        guessesLeftLabel.setText("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
+                        System.out.println("Duplicate");
+                        playerVsComp.removeList();
+                        duplicate(message);
                     }
                 }
-                else {
-                    System.out.println("Duplicate");
-                    playerVsComp.removeList();
-                    duplicate(message);
-                }
-
             });
         }
+
+        private boolean isemptyNisLetter() {
+            for (TextField textField : tfList) {
+                try {
+                    char num = textField.getText().toString().charAt(0);
+                    Character.isDigit(num);
+                    Character.isWhitespace(num);
+                } catch (Exception e) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         private void messages(Label message) {
             if(playerVsComp.getAttemptsMade()==0&&playerVsComp.getGamesPlayed()==0){

@@ -399,7 +399,7 @@ public class MasterMind extends Application {
             PlayAgain.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 18));
             PlayAgain.setTextFill(Color.WHITE);
 
-            VBox scorePane = endScreenScore();
+            Pane scorePane = endScreenScore();
 
             HBox ynPane = new HBox(20);
             ynPane.setAlignment(Pos.CENTER);
@@ -411,17 +411,20 @@ public class MasterMind extends Application {
                 no.setOnAction(new TryAginNo());
 
             ynPane.getChildren().addAll(yes, no);
-            centerPane.getChildren().addAll(EndOfGameMessage, scorePane,PlayAgain, ynPane);
+            centerPane.getChildren().addAll(EndOfGameMessage, scorePane, PlayAgain, ynPane);
         }
 
-        private VBox endScreenScore() {
-            VBox scorePane = new VBox();
+        private Pane endScreenScore() {
+            Pane scorePane = new Pane();
 
-            TextField score = new TextField();
-            score.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
-            score.setStyle("-fx-color: white; -fx-border-color: white");
+            Label score = new Label();
+            score.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 16));
+            score.setStyle("-fx-text-fill: white;");
+            score.setTextAlignment(TextAlignment.CENTER);
+            score.maxWidth(300);
+            score.setLayoutX(240);
 
-            score.setText("Final Score");
+            score.setText(playerVsComp.finalScore());
 
 
             scorePane.getChildren().add(score);

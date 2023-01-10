@@ -400,6 +400,7 @@ public class MasterMind extends Application {
             hintPane.getChildren().clear();
             if(bottomPane!=null)
                 bottomPane.getChildren().clear();
+            Hint.clearHint();
             
             Label EndOfGameMessage = new Label();
             EndOfGameMessage.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));

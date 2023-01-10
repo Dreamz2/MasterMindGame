@@ -74,11 +74,8 @@ public class PlayerNComp {
         int correct = 0;
         
         for(int i=0; i< getLength(); i++){
-            // if(player.get(i + lengthOfDigits*(attemptsMade-1))==compList.get(i))
             if(player.get(gamesPlayed).get(i)==compList.get(gamesPlayed).get(i))
                 correct++;
-            // System.out.println(player.get(i + lengthOfDigits*(attemptsMade-1)) + ", " + compList.get(i));
-            System.out.println(player.get(gamesPlayed).get(i) + ", " + compList.get(gamesPlayed).get(i));
         }
         
         addAttemptsMade();
@@ -106,27 +103,4 @@ public class PlayerNComp {
                 "Length of Digits: " + getLength()     + "\n" +
                 "Attempts made: " + getAttemptsMade();
     }
-    
-    //
-
-    public void test() {
-        player.get(gamesPlayed).test();
-    }
-
-    public void print() {
-        System.out.println(player.size() +" games played");
-        System.out.println(gamesPlayed + " games played");
-        System.out.println(player.get(gamesPlayed).getAttemptsMade() + " Attempts made");
-        System.out.println(player.get(gamesPlayed).size1() + " Thing size");
-        System.out.println(player.get(gamesPlayed).size2() + " input size");
-        System.out.println(player.get(gamesPlayed).getLength() + " Length of digits");
-        System.out.println(guessesAllowed + " Guess allowed");
-        for (int i = 0; i < player.get(gamesPlayed).size1(); i++) {
-            for (int j = 0; j < player.get(gamesPlayed).size2(); j++) {
-                System.out.print(player.get(gamesPlayed).get2(i, j));
-            }
-            System.out.println();
-        }
-    }
-
 }

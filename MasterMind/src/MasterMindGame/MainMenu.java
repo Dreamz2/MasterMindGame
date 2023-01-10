@@ -88,7 +88,6 @@ public class MainMenu implements Difficulty{
         FlowPane lenNDiffPane = new FlowPane(Orientation.VERTICAL, 0, 30);
         lenNDiffPane.setAlignment(Pos.CENTER);
 
-            // FlowPane lenPane = new FlowPane(Orientation.HORIZONTAL, 0, 10);
             VBox lenPane = new VBox(10);
             lenPane.setAlignment(Pos.CENTER);
 

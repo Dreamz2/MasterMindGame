@@ -86,19 +86,14 @@ public class GameHandler{
                 playerVsComp.addPlayerList();
                 for(int i = 0; i < playerVsComp.getLength(); i++) {
                     playerVsComp.addPlayerInput(tfList.get(i).getText().toString().charAt(0) - '0');
-                    System.out.println(tfList.get(i).getText().toString() + " test ");
                     tfList.get(i).setText("");
-                    // System.out.println(userInputs.get(attemptsMade).get(i));
                 }
-                playerVsComp.print();
                 if(!playerVsComp.duplicateInputs()) {
                     if(playerVsComp.checkGuess()){
                         finishGame(true);
-                        System.out.println("Congratulations");
                     }
                     else if(playerVsComp.getAttemptsMade()==playerVsComp.getGuessesAllowed()) {
                         finishGame(false);
-                        System.out.println(playerVsComp.getAttemptsMade());
                     }
                     else {
                         if(playerVsComp.getAttemptsMade()==3||playerVsComp.getAttemptsMade()==6||playerVsComp.getAttemptsMade()>=9){
@@ -109,7 +104,6 @@ public class GameHandler{
                     }
                 }
                 else {
-                    System.out.println("Duplicate");
                     playerVsComp.removeList();
                     duplicate(message);
                 }
@@ -178,9 +172,9 @@ public class GameHandler{
         tfList.clear();
 
         Label hint = new Label("Do you want a hint?");
-        // hint.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
-        // hint.setTextFill(Color.WHITE);
-        // hint.setTextAlignment(TextAlignment.CENTER);
+        hint.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
+        hint.setTextFill(Color.WHITE);
+        hint.setTextAlignment(TextAlignment.CENTER);
 
         HBox ynPane = new HBox(20);
         ynPane.setAlignment(Pos.CENTER);
@@ -201,7 +195,7 @@ public class GameHandler{
         hintPane.setLayoutY(160);
         
         Label hintTitle = new Label("Hints");
-        hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 10));
+        hintTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.REGULAR, 14));
         hintTitle.setTextFill(Color.WHITE);
         hintTitle.setLayoutX(15);
         hintTitle.setAlignment(Pos.CENTER);
@@ -280,7 +274,6 @@ public class GameHandler{
         FlowPane lenNDiffPane = new FlowPane(Orientation.VERTICAL, 0, 30);
         lenNDiffPane.setAlignment(Pos.CENTER);
 
-            // FlowPane lenPane = new FlowPane(Orientation.HORIZONTAL, 0, 10);
             VBox lenPane = new VBox(10);
             lenPane.setAlignment(Pos.CENTER);
 

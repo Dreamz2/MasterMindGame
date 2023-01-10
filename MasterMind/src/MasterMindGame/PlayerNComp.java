@@ -57,6 +57,10 @@ public class PlayerNComp {
         return gamesPlayed;
     }
 
+    public int currentGame() {
+        return getGamesPlayed()+1;
+    }
+
     public void addAttemptsMade() {
         player.get(gamesPlayed).addAttemptsMade();
     }
@@ -93,6 +97,14 @@ public class PlayerNComp {
 
     public void removeList() {
         player.get(gamesPlayed).remove();
+    }
+
+    public String finalScore() {
+        return "Final Score\n" + 
+                "Games Played: " + currentGame()    + "\n" +
+                "Difficultly: " + getGuessesAllowed()  + "\n" +
+                "Length of Digits: " + getLength()     + "\n" +
+                "Attempts made: " + getAttemptsMade();
     }
     
     //

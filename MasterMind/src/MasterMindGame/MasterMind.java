@@ -227,7 +227,7 @@ public class MasterMind extends Application {
             rootPane.setCenter(centerPane);
         }
 
-        public void displayEnvironment() {
+        private void displayEnvironment() {
             Label guessesLeftLabel = new Label("Guesses Left: " + (playerVsComp.getGuessesAllowed()-playerVsComp.getAttemptsMade()));
             guessesLeftLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 15));
             guessesLeftLabel.setTextFill(Color.WHITE);
@@ -390,15 +390,16 @@ public class MasterMind extends Application {
             EndOfGameMessage.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 28));
             EndOfGameMessage.setTextFill(Color.WHITE);
 
-            if(finalResult) {
+            if(finalResult) 
                 EndOfGameMessage.setText("Congratulations You Win");
-            }
-            else {
+            else
                 EndOfGameMessage.setText("You Lose");
-            }
-            Label PlayAgain = new Label("Do you want to play again?");
+            
+            Label PlayAgain = new Label("Play again?");
             PlayAgain.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 18));
             PlayAgain.setTextFill(Color.WHITE);
+
+            Pane scorePane = endScreenScore();
 
             HBox ynPane = new HBox(20);
             ynPane.setAlignment(Pos.CENTER);
@@ -410,7 +411,22 @@ public class MasterMind extends Application {
                 no.setOnAction(new TryAginNo());
 
             ynPane.getChildren().addAll(yes, no);
-            centerPane.getChildren().addAll(EndOfGameMessage, PlayAgain, ynPane);
+            centerPane.getChildren().addAll(EndOfGameMessage, scorePane, PlayAgain, ynPane);
+        }
+
+        private Pane endScreenScore() {
+            Pane scorePane = new Pane();
+
+            Label score = new Label();
+            score.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 16));
+            score.setStyle("-fx-text-fill: white;");
+            score.setTextAlignment(TextAlignment.CENTER);
+            score.maxWidth(300);
+            score.setLayoutX(240);
+            score.setText(playerVsComp.finalScore());
+
+            scorePane.getChildren().add(score);
+            return scorePane;
         }
 
         private void LengthPane() {

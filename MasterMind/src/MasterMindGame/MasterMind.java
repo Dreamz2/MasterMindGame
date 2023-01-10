@@ -423,9 +423,7 @@ public class MasterMind extends Application {
             score.setTextAlignment(TextAlignment.CENTER);
             score.maxWidth(300);
             score.setLayoutX(240);
-
             score.setText(playerVsComp.finalScore());
-
 
             scorePane.getChildren().add(score);
             return scorePane;
